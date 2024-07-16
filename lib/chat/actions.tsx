@@ -34,7 +34,6 @@ import {
 import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
-import { auth } from '@/auth'
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -148,7 +147,85 @@ async function submitUserMessage(content: string) {
     If you want to show events, call \`get_events\`.
     If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
     
-    Besides that, you can also chat with users and do some calculations if needed.`,
+    Besides that, you can also chat with users and do some calculations if needed.
+    
+    ### Example function calling:
+    1. listStocks
+    This tool lists three imaginary trending stocks.
+    Parameters:
+    stocks: An array of objects, each with the following properties:
+    symbol: The symbol of the stock (string).
+    price: The price of the stock (number).
+    delta: The change in the price of the stock (number).
+    Prompt Example:
+    {
+    "toolName": "listStocks",
+      "args": {
+        "stocks": [
+          { "symbol": "IMAG1", "price": 150.75, "delta": 3.25 },
+          { "symbol": "IMAG2", "price": 78.40, "delta": -1.15 },
+          { "symbol": "IMAG3", "price": 95.60, "delta": 2.30 }
+        ]
+      }
+    }
+    2. showStockPrice
+    This tool gets the current stock price of a given stock or currency.
+    Parameters:
+    symbol: The name or symbol of the stock or currency (string).
+    price: The price of the stock (number).
+    delta: The change in the price of the stock (number).
+    Prompt Example:
+      {
+      "toolName": "showStockPrice",
+      "args": {
+        "symbol": "AAPL",
+        "price": 145.30,
+        "delta": -2.15
+      }
+      }
+    3. showStockPurchase
+    This tool shows the price and the UI to purchase a stock or currency.
+    Parameters:
+    symbol: The name or symbol of the stock or currency (string).
+    price: The price of the stock (number).
+    numberOfShares: The number of shares for the stock or currency to purchase (optional, number).
+    Prompt Example:
+      {
+      "toolName": "showStockPurchase",
+      "args": {
+        "symbol": "TSLA",
+        "price": 695.50,
+        "numberOfShares": 50
+      }
+    }
+    4. getEvents
+    This tool lists events between user highlighted dates that describe stock activity.
+    Parameters:
+    events: An array of objects, each with the following properties:
+    date: The date of the event, in ISO-8601 format (string).
+    headline: The headline of the event (string).
+    description: The description of the event (string).
+    Prompt Example:
+    {
+      "toolName": "getEvents",
+        "args": {
+          "events": [
+            { "date": "2022-01-01", "headline": "Tesla Takes Off to New Highs", "description": "Tesla's stock surges 5% on first trading day of the year, driven by optimism around electric vehicle adoption" },
+            { "date": "2022-01-15", "headline": "Tesla's Supply Chain Snafu", "description": "Tesla's stock plunges 3% as global chip shortage raises concerns about production delays" },
+            { "date": "2022-02-01", "headline": "Tesla's Earnings Boost", "description": "Tesla reports record quarterly earnings, driven by strong demand for its Model 3 and Model Y vehicles, sending stock up 7%" }
+          ]
+      }
+    }
+      
+    ### Date formatting:
+    For any dates, use the format YYYY-MM-DD.
+    
+    Example: 2022-01-01
+
+    ### Guidelines:
+
+    Never provide empty results to the user. Provide synthetic events, stocks, etc.
+    `,
     messages: [
       ...aiState.get().messages.map((message: any) => ({
         role: message.role,
@@ -156,7 +233,7 @@ async function submitUserMessage(content: string) {
         name: message.name
       }))
     ],
-    text: ({ content, done, delta }) => {
+    text: ({ content, done, delta }) => {      
       if (!textStream) {
         textStream = createStreamableValue('')
         textNode = <BotMessage content={textStream.value} />
@@ -509,47 +586,14 @@ export const AI = createAI<AIState, UIState>({
   onGetUIState: async () => {
     'use server'
 
-    const session = await auth()
-
-    if (session && session.user) {
-      const aiState = getAIState() as Chat
-
-      if (aiState) {
-        const uiState = getUIStateFromAIState(aiState)
-        return uiState
-      }
-    } else {
       return
-    }
+    
   },
   onSetAIState: async ({ state }) => {
     'use server'
 
-    const session = await auth()
-
-    if (session && session.user) {
-      const { chatId, messages } = state
-
-      const createdAt = new Date()
-      const userId = session.user.id as string
-      const path = `/chat/${chatId}`
-
-      const firstMessageContent = messages[0].content as string
-      const title = firstMessageContent.substring(0, 100)
-
-      const chat: Chat = {
-        id: chatId,
-        title,
-        userId,
-        createdAt,
-        messages,
-        path
-      }
-
-      await saveChat(chat)
-    } else {
       return
-    }
+
   }
 })
 

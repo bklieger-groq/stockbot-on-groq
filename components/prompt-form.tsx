@@ -8,7 +8,7 @@ import { useActions, useUIState } from 'ai/rsc'
 import { UserMessage } from './stocks/message'
 import { type AI } from '@/lib/chat/actions'
 import { Button } from '@/components/ui/button'
-import { IconArrowElbow, IconPlus } from '@/components/ui/icons'
+import { IconArrowDown, IconPlus } from '@/components/ui/icons'
 import {
   Tooltip,
   TooltipContent,
@@ -102,7 +102,7 @@ export function PromptForm({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button type="submit" size="icon" disabled={input === ''}>
-                <IconArrowElbow />
+                <div className="rotate-180"><IconArrowDown /></div>
                 <span className="sr-only">Send message</span>
               </Button>
             </TooltipTrigger>

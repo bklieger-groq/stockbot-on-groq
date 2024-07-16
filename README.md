@@ -1,5 +1,14 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="https://chat.vercel.ai/opengraph-image.png">
+<h1 align="center">Next.js AI Chatbot with Groq [🚧 In Development]</h1>
+
+[Demo of Groq Gen UI](https://github.com/user-attachments/assets/52a18836-2af9-4669-8931-83fb1813b9b6)
+
+> [!IMPORTANT]
+>  Note: Data and latency are simulated for illustrative purposes and should not be considered as financial advice.
+
+---
+
+<a href="https://groq.com/">
+  <img alt="Next.js 14 and App Router-ready AI chatbot powered by Groq." src="">
   <h1 align="center">Next.js AI Chatbot</h1>
 </a>
 

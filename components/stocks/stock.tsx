@@ -66,6 +66,7 @@ export function Stock({ props: { symbol, price, delta } }: { props: Stock }) {
   }, [startHighlight, endHighlight])
 
   return (
+    <div>
     <div className="rounded-xl border bg-zinc-950 p-4 text-green-400">
       <div className="float-right inline-block rounded-full bg-white/10 px-2 py-1 text-xs">
         {`${delta > 0 ? '+' : ''}${((delta / price) * 100).toFixed(2)}% ${
@@ -206,5 +207,10 @@ export function Stock({ props: { symbol, price, delta } }: { props: Stock }) {
         </svg>
       </div>
     </div>
+    <div className="p-4 text-center text-sm text-zinc-500">
+    Note: Data and latency are simulated for illustrative purposes and
+    should not be considered as financial advice.
+  </div>
+  </div>
   )
 }

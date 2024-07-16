@@ -41,6 +41,8 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     if (messagesLength === 2) {
       router.refresh()
     }
+    // console.log("Value: ",aiState.messages);
+
   }, [aiState.messages, router])
 
   useEffect(() => {
