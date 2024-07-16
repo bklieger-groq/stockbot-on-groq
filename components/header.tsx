@@ -24,8 +24,9 @@ async function UserOrLogin() {
         </Link>
       
       <div className="flex items-center">
+        
         <IconSeparator className="size-6 text-muted-foreground/50" />
-          GenUI with Groq
+          <a href="/new">StockBot on Groq</a>
         
       </div>
     </>

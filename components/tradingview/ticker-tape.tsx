@@ -57,9 +57,9 @@ export function TickerTape() {
   return (
     <div className="tradingview-widget-container mb-4" ref={containerRef}>
       <div className="tradingview-widget-container__widget"></div>
-      <div className="tradingview-widget-copyright flex justify-end mr-2 ">
-        <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-          <span className="">Track all markets <br /> on TradingView</span>
+      <div className="tradingview-widget-copyright flex justify-end mr-2">
+        <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank" className="justify-end text-right">
+          <span className="">Track all markets on TradingView</span>
         </a>
       </div>
     </div>
