@@ -39,76 +39,6 @@ import { StockPrice } from '@/components/tradingview/stock-price'
 import { StockFinancials } from '@/components/tradingview/stock-financials'
 
 
-async function confirmPurchase(symbol: string, price: number, amount: number) {
-  'use server'
-
-  const aiState = getMutableAIState<typeof AI>()
-
-  const purchasing = createStreamableUI(
-    <div className="inline-flex items-start gap-1 md:items-center">
-      {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
-    </div>
-  )
-
-  const systemMessage = createStreamableUI(null)
-
-  runAsyncFnWithoutBlocking(async () => {
-    await sleep(1000)
-
-    purchasing.update(
-      <div className="inline-flex items-start gap-1 md:items-center">
-        {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
-      </div>
-    )
-
-    await sleep(1000)
-
-    purchasing.done(
-      <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{' '}
-          {formatNumber(amount * price)}
-        </p>
-      </div>
-    )
-
-    systemMessage.done(
-      <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={' '}
-        {formatNumber(amount * price)}.
-      </SystemMessage>
-    )
-
-    aiState.done({
-      ...aiState.get(),
-      messages: [
-        ...aiState.get().messages,
-        {
-          id: nanoid(),
-          role: 'system',
-          content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
-            amount * price
-          }]`
-        }
-      ]
-    })
-  })
-
-  return {
-    purchasingUI: purchasing.value,
-    newMessage: {
-      id: nanoid(),
-      display: systemMessage.value
-    }
-  }
-}
-
 async function submitUserMessage(content: string) {
   'use server'
 
@@ -135,7 +65,8 @@ async function submitUserMessage(content: string) {
   });
 
   const result = await streamUI({
-    model: groq('llama3-70b-8192'),
+    model: groq('gemma2-9b-it'),
+    // llama3-groq-70b-8192-tool-use-preview
     initial: <SpinnerMessage />,
     system: `\
     You are a stock market conversation bot and you can help users buy stocks, step by step.
@@ -186,7 +117,12 @@ async function submitUserMessage(content: string) {
 
     ### Guidelines:
 
-    Never provide empty results to the user. Provide synthetic events, stocks, etc.
+    Never provide empty results to the user. Provide commentary describing your tool use after calling a tool, without referencing the data inside. You do not have access to stock data directly, you must call the tools to share it with the user.
+
+    Example:
+
+    User: What is the price of AAPL?
+    Assistant (you): [Call the tool showStockPrice for symbol="AAPL"] Here is the price of AAPL stock. Would you like to see a chart of AAPL or get more information about its financials?
     `,
     messages: [
       ...aiState.get().messages.map((message: any) => ({
@@ -195,7 +131,7 @@ async function submitUserMessage(content: string) {
         name: message.name
       }))
     ],
-    text: ({ content, done, delta }) => {      
+    text: ({ content, done, delta }) => {    
       if (!textStream) {
         textStream = createStreamableValue('')
         textNode = <BotMessage content={textStream.value} />
@@ -414,7 +350,6 @@ export type UIState = {
 export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage,
-    confirmPurchase
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },
