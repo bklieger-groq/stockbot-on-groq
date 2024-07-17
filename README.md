@@ -5,6 +5,12 @@
 > [!IMPORTANT]
 >  Note: Data and latency are simulated for illustrative purposes and should not be considered as financial advice.
 
+
+Example queries:
+1. What are the financials of Apple?
+2. What is the price of DOGE?
+3. Show me a chart of GOOG
+
 ---
 
 <a href="https://groq.com/">

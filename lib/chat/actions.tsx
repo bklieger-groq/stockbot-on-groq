@@ -36,6 +36,7 @@ import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { StockChart } from '@/components/tradingview/stock-chart'
 import { StockPrice } from '@/components/tradingview/stock-price'
+import { StockFinancials } from '@/components/tradingview/stock-financials'
 
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
@@ -153,24 +154,17 @@ async function submitUserMessage(content: string) {
     Besides that, you can also chat with users and do some calculations if needed.
     
     ### Example function calling:
-    1. listStocks
-    This tool lists three imaginary trending stocks.
+    1. showStockFinancials
+    This tool shows the financials for a given stock.
     Parameters:
-    stocks: An array of objects, each with the following properties:
-    symbol: The symbol of the stock (string).
-    price: The price of the stock (number).
-    delta: The change in the price of the stock (number).
+    symbol: The name or symbol of the stock or currency (string).
     Prompt Example:
-    {
-    "toolName": "listStocks",
+      {
+      "toolName": "showStockChart",
       "args": {
-        "stocks": [
-          { "symbol": "IMAG1", "price": 150.75, "delta": 3.25 },
-          { "symbol": "IMAG2", "price": 78.40, "delta": -1.15 },
-          { "symbol": "IMAG3", "price": 95.60, "delta": 2.30 }
-        ]
+        "symbol": "AAPL",
       }
-    }
+      }
     2. showStockChart
     This tool shows a stock chart for a given stock or currency.
     Parameters:
@@ -427,6 +421,63 @@ async function submitUserMessage(content: string) {
           return (
             <BotCard>
               <StockPrice props={symbol} />
+            </BotCard>
+          )
+        }
+      },
+      showStockFinancials: {
+        description:
+          'Show the financials of a given stock. Use this to show the financials to the user.',
+        parameters: z.object({
+          symbol: z
+            .string()
+            .describe(
+              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+            )
+        }),
+        generate: async function* ({ symbol }) {
+          yield (
+            <BotCard>
+              <StockSkeleton />
+            </BotCard>
+          )
+
+          const toolCallId = nanoid()
+
+          aiState.done({
+            ...aiState.get(),
+            messages: [
+              ...aiState.get().messages,
+              {
+                id: nanoid(),
+                role: 'assistant',
+                content: [
+                  {
+                    type: 'tool-call',
+                    toolName: 'showStockFinancials',
+                    toolCallId,
+                    args: { symbol }
+                  }
+                ]
+              },
+              {
+                id: nanoid(),
+                role: 'tool',
+                content: [
+                  {
+                    type: 'tool-result',
+                    toolName: 'showStockFinancials',
+                    toolCallId,
+                    result: { symbol }
+                  }
+                ]
+              }
+            ]
+          })
+
+          return (
+            <BotCard>
+              <StockFinancials props={symbol} />
             </BotCard>
           )
         }
