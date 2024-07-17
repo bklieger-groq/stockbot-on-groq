@@ -141,18 +141,6 @@ async function submitUserMessage(content: string) {
     You are a stock market conversation bot and you can help users buy stocks, step by step.
     You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
     
-    Messages inside [] means that it's a UI element or a user event. For example:
-    - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-    - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
-    
-    If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-    If the user just wants the price, call \`show_stock_price\` to show the price.
-    If you want to show trending stocks, call \`list_stocks\`.
-    If you want to show events, call \`get_events\`.
-    If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
-    
-    Besides that, you can also chat with users and do some calculations if needed.
-    
     ### Example function calling:
     1. showStockFinancials
     This tool shows the financials for a given stock.
@@ -185,24 +173,6 @@ async function submitUserMessage(content: string) {
       "toolName": "showStockPrice",
       "args": {
         "symbol": "TSLA",
-      }
-    }
-    4. getEvents
-    This tool lists events between user highlighted dates that describe stock activity.
-    Parameters:
-    events: An array of objects, each with the following properties:
-    date: The date of the event, in ISO-8601 format (string).
-    headline: The headline of the event (string).
-    description: The description of the event (string).
-    Prompt Example:
-    {
-      "toolName": "getEvents",
-        "args": {
-          "events": [
-            { "date": "2022-01-01", "headline": "Tesla Takes Off to New Highs", "description": "Tesla's stock surges 5% on first trading day of the year, driven by optimism around electric vehicle adoption" },
-            { "date": "2022-01-15", "headline": "Tesla's Supply Chain Snafu", "description": "Tesla's stock plunges 3% as global chip shortage raises concerns about production delays" },
-            { "date": "2022-02-01", "headline": "Tesla's Earnings Boost", "description": "Tesla reports record quarterly earnings, driven by strong demand for its Model 3 and Model Y vehicles, sending stock up 7%" }
-          ]
       }
     }
       
@@ -251,66 +221,6 @@ async function submitUserMessage(content: string) {
       return textNode
     },
     tools: {
-      listStocks: {
-        description: 'List three imaginary stocks that are trending.',
-        parameters: z.object({
-          stocks: z.array(
-            z.object({
-              symbol: z.string().describe('The symbol of the stock'),
-              price: z.number().describe('The price of the stock'),
-              delta: z.number().describe('The change in price of the stock')
-            })
-          )
-        }),
-        generate: async function* ({ stocks }) {
-          yield (
-            <BotCard>
-              <StocksSkeleton />
-            </BotCard>
-          )
-
-          await sleep(1000)
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'listStocks',
-                    toolCallId,
-                    args: { stocks }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'listStocks',
-                    toolCallId,
-                    result: stocks
-                  }
-                ]
-              }
-            ]
-          })
-
-          return (
-            <BotCard>
-              <Stocks props={stocks} />
-            </BotCard>
-          )
-        }
-      },
       showStockChart: {
         description:
           'Show a stock chart of a given stock. Use this to show the chart to the user.',
@@ -482,69 +392,6 @@ async function submitUserMessage(content: string) {
           )
         }
       },
-      getEvents: {
-        description:
-          'List funny imaginary events between user highlighted dates that describe stock activity.',
-        parameters: z.object({
-          events: z.array(
-            z.object({
-              date: z
-                .string()
-                .describe('The date of the event, in ISO-8601 format'),
-              headline: z.string().describe('The headline of the event'),
-              description: z.string().describe('The description of the event')
-            })
-          )
-        }),
-        generate: async function* ({ events }) {
-          yield (
-            <BotCard>
-              <EventsSkeleton />
-            </BotCard>
-          )
-
-          await sleep(1000)
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'getEvents',
-                    toolCallId,
-                    args: { events }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'getEvents',
-                    toolCallId,
-                    result: events
-                  }
-                ]
-              }
-            ]
-          })
-
-          return (
-            <BotCard>
-              <Events props={events} />
-            </BotCard>
-          )
-        }
-      }
     }
   })
 
@@ -593,7 +440,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
       display:
         message.role === 'tool' ? (
           message.content.map(tool => {
-            return tool.toolName === 'listStocks' ? (
+            return tool.toolName === 'showStockFinancials' ? (
               <BotCard>
                 {/* TODO: Infer types based on the tool result*/}
                 {/* @ts-expect-error */}
@@ -608,11 +455,6 @@ export const getUIStateFromAIState = (aiState: Chat) => {
               <BotCard>
                 {/* @ts-expect-error */}
                 <Purchase props={tool.result} />
-              </BotCard>
-            ) : tool.toolName === 'getEvents' ? (
-              <BotCard>
-                {/* @ts-expect-error */}
-                <Events props={tool.result} />
               </BotCard>
             ) : null
           })
