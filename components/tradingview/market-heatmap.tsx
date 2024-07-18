@@ -2,30 +2,31 @@
 
 import React, { useEffect, useRef, memo } from 'react';
 
-export function StockChart({ props: symbol }: { props: string }) {
+export function MarketHeatmap({}) {
   const container = useRef();
   
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
     script.type = "text/javascript";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: symbol,
-      interval: "D",
-      timezone: "Etc/UTC",
-      theme: "light",
-      style: "1",
-      locale: "en",
-      backgroundColor: "rgba(255, 255, 255, 1)",
-      gridColor: "rgba(247, 247, 247, 1)",
-      withdateranges: true,
-      allow_symbol_change: true,
-      calendar: false,
-      hide_top_toolbar: true,
-      support_host: "https://www.tradingview.com"
-    });
+        exchanges: [],
+        dataSource: "SPX500",
+        grouping: "sector",
+        blockSize: "market_cap_basic",
+        blockColor: "change",
+        locale: "en",
+        symbolUrl: "",
+        colorTheme: "light",
+        hasTopBar: false,
+        isDataSetEnabled: false,
+        isZoomEnabled: true,
+        hasSymbolTooltip: true,
+        isMonoSize: false,
+        width: "100%",
+        height: "100%"
+      });
     
     container.current.appendChild(script);
 
@@ -34,7 +35,7 @@ export function StockChart({ props: symbol }: { props: string }) {
         container.current.removeChild(script);
       }
     };
-  }, [symbol]);
+  }, []);
 
   return (
     <div style={{height:"500px"}}>
@@ -50,4 +51,4 @@ export function StockChart({ props: symbol }: { props: string }) {
   );
 }
 
-export default memo(StockChart);
+export default memo(MarketHeatmap);

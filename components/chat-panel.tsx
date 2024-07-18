@@ -51,6 +51,16 @@ export function ChatPanel({
       message: `What are Microsoft's latest financials?`
     },
     {
+      heading: 'Show me a screener',
+      subheading: 'to find new stocks',
+      message: 'Show me a screener to find new stocks'
+    },
+    {
+      heading: 'How is the stock market',
+      subheading: 'performing today by sector?',
+      message: `How is the stock market performing today by sector?`
+    },
+    {
       heading: 'What are some recent',
       subheading: `events about Amazon?`,
       message: `What are some recent events about Amazon?`

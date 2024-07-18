@@ -2,29 +2,24 @@
 
 import React, { useEffect, useRef, memo } from 'react';
 
-export function StockChart({ props: symbol }: { props: string }) {
+export function StockScreener({}) {
   const container = useRef();
   
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
     script.type = "text/javascript";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: symbol,
-      interval: "D",
-      timezone: "Etc/UTC",
-      theme: "light",
-      style: "1",
-      locale: "en",
-      backgroundColor: "rgba(255, 255, 255, 1)",
-      gridColor: "rgba(247, 247, 247, 1)",
-      withdateranges: true,
-      allow_symbol_change: true,
-      calendar: false,
-      hide_top_toolbar: true,
-      support_host: "https://www.tradingview.com"
+        width: "100%",
+        height: "100%",
+        defaultColumn: "overview",
+        defaultScreen: "most_capitalized",
+        market: "america",
+        showToolbar: true,
+        colorTheme: "light",
+        locale: "en",
+        isTransparent: true
     });
     
     container.current.appendChild(script);
@@ -34,7 +29,7 @@ export function StockChart({ props: symbol }: { props: string }) {
         container.current.removeChild(script);
       }
     };
-  }, [symbol]);
+  }, []);
 
   return (
     <div style={{height:"500px"}}>
@@ -50,4 +45,4 @@ export function StockChart({ props: symbol }: { props: string }) {
   );
 }
 
-export default memo(StockChart);
+export default memo(StockScreener);
