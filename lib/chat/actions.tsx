@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { generateText } from 'ai';
 import {
   createAI,
   createStreamableUI,
@@ -38,6 +39,75 @@ import { StockChart } from '@/components/tradingview/stock-chart'
 import { StockPrice } from '@/components/tradingview/stock-price'
 import { StockFinancials } from '@/components/tradingview/stock-financials'
 
+const MODEL = 'llama3-70b-8192';
+const TOOL_MODEL = 'llama3-70b-8192';
+
+    // llama3-groq-70b-8192-tool-use-preview
+
+
+async function generateCaption(symbol: string, toolName: string, aiState): Promise<string> {
+  const groq = createOpenAI({
+    baseURL: 'https://api.groq.com/openai/v1',
+    apiKey: process.env.GROQ_API_KEY,
+  });
+
+  aiState.update({
+    ...aiState.get(),
+    messages: [
+      ...aiState.get().messages
+    ]
+  })
+  const captionSystemMessage = `\
+    You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
+    
+    These are the tools you have available:
+    1. showStockFinancials
+    This tool shows the financials for a given stock.
+
+    2. showStockChart
+    This tool shows a stock chart for a given stock or currency.
+
+    3. showStockPrice
+    This tool shows the price of a stock or currency.
+
+    You have just called a tool (`+toolName+` for `+symbol+`) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
+      
+    Example:
+
+    User: What is the price of AAPL?
+    Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
+    
+    Assistant (you): The price of AAPL stock is provided above. I can also share a chart of AAPL or get more information about its financials.
+
+    or
+
+    Assistant (you): This is the price of AAPL stock. I can also generate a chart or share further financial data.
+
+    or 
+    Assistant (you): Would you like to see a chart of AAPL or get more information about its financials?
+
+    Talk like one of the above responses, but BE CREATIVE and generate a DIVERSE response.
+    `
+  // Assistant (you): Here is the price of AAPL stock. Would you like to see a chart of AAPL or get more information about its financials?
+
+  const response = await generateText({
+    model: groq(MODEL),
+    messages: [
+      {
+        id: nanoid(),
+        role: 'system',
+        content: captionSystemMessage
+      },
+      ...aiState.get().messages.map((message: any) => ({
+        role: message.role,
+        content: message.content,
+        name: message.name
+      }))
+    ]
+  });
+
+  return response.text || '';
+}
 
 async function submitUserMessage(content: string) {
   'use server'
@@ -65,12 +135,10 @@ async function submitUserMessage(content: string) {
   });
 
   const result = await streamUI({
-    model: groq('gemma2-9b-it'),
-    // llama3-groq-70b-8192-tool-use-preview
+    model: groq(TOOL_MODEL),
     initial: <SpinnerMessage />,
     system: `\
-    You are a stock market conversation bot and you can help users buy stocks, step by step.
-    You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
+    You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
     
     ### Example function calling:
     1. showStockFinancials
@@ -117,12 +185,11 @@ async function submitUserMessage(content: string) {
 
     ### Guidelines:
 
-    Never provide empty results to the user. Provide commentary describing your tool use after calling a tool, without referencing the data inside. You do not have access to stock data directly, you must call the tools to share it with the user.
-
+    Never provide empty results to the user. Provide the relevant tool if it matches the user's request. Otherwise, respond as the stock bot.
     Example:
 
     User: What is the price of AAPL?
-    Assistant (you): [Call the tool showStockPrice for symbol="AAPL"] Here is the price of AAPL stock. Would you like to see a chart of AAPL or get more information about its financials?
+    Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
     `,
     messages: [
       ...aiState.get().messages.map((message: any) => ({
@@ -132,7 +199,7 @@ async function submitUserMessage(content: string) {
       }))
     ],
     text: ({ content, done, delta }) => {    
-      if (!textStream) {
+      if (!textStream) {        
         textStream = createStreamableValue('')
         textNode = <BotMessage content={textStream.value} />
       }
@@ -207,9 +274,12 @@ async function submitUserMessage(content: string) {
             ]
           })
 
+          const caption = await generateCaption(symbol,"showStockChart",aiState);
+
           return (
             <BotCard>
               <StockChart props={symbol} />
+              {caption}
             </BotCard>
           )
         }
@@ -263,10 +333,12 @@ async function submitUserMessage(content: string) {
               }
             ]
           })
+          const caption = await generateCaption(symbol,"showStockPrice",aiState);
 
           return (
             <BotCard>
               <StockPrice props={symbol} />
+              {caption}
             </BotCard>
           )
         }
@@ -321,11 +393,15 @@ async function submitUserMessage(content: string) {
             ]
           })
 
+          const caption = await generateCaption(symbol,"StockFinancials",aiState);
+
           return (
             <BotCard>
               <StockFinancials props={symbol} />
+              {caption}
             </BotCard>
           )
+
         }
       },
     }
@@ -367,6 +443,7 @@ export const AI = createAI<AIState, UIState>({
   }
 })
 
+// TODO: Update
 export const getUIStateFromAIState = (aiState: Chat) => {
   return aiState.messages
     .filter(message => message.role !== 'system')
