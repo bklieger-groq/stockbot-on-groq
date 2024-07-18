@@ -3,9 +3,11 @@
 import React, { useEffect, useRef, memo } from 'react';
 
 export function MarketOverview({}) {
-  const container = useRef();
+  const container = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    if (!container.current) return;
+
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js";
     script.type = "text/javascript";

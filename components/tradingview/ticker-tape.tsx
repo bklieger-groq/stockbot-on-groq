@@ -5,9 +5,11 @@ import { useRef, useEffect} from 'react'
 import Script from 'next/script';
 
 export function TickerTape() {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const script = document.createElement('script');
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
     script.async = true;

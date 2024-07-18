@@ -3,9 +3,11 @@
 import React, { useEffect, useRef, memo } from 'react';
 
 export function MarketHeatmap({}) {
-  const container = useRef();
+  const container = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    if (!container.current) return;
+
     const script = document.createElement("script");
     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
     script.type = "text/javascript";

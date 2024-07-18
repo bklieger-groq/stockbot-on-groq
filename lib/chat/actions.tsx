@@ -32,7 +32,6 @@ import {
   sleep,
   nanoid
 } from '@/lib/utils'
-import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { StockChart } from '@/components/tradingview/stock-chart'
@@ -43,6 +42,21 @@ import { StockScreener } from '@/components/tradingview/stock-screener'
 import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
 
+export type AIState = {
+  chatId: string
+  messages: Message[]
+}
+
+export type UIState = {
+  id: string
+  display: React.ReactNode
+}[]
+
+interface MutableAIState {
+  update: (newState:any) => void;
+  done: (newState: any) => void;
+  get: () => AIState;
+}
 
 const MODEL = 'llama3-70b-8192';
 const TOOL_MODEL = 'llama3-70b-8192';
@@ -50,7 +64,7 @@ const TOOL_MODEL = 'llama3-70b-8192';
     // llama3-groq-70b-8192-tool-use-preview
 
 
-async function generateCaption(symbol: string, toolName: string, aiState): Promise<string> {
+async function generateCaption(symbol: string, toolName: string, aiState: MutableAIState): Promise<string> {
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
     apiKey: process.env.GROQ_API_KEY,
@@ -116,7 +130,6 @@ async function generateCaption(symbol: string, toolName: string, aiState): Promi
     model: groq(MODEL),
     messages: [
       {
-        id: nanoid(),
         role: 'system',
         content: captionSystemMessage
       },
@@ -696,15 +709,6 @@ async function submitUserMessage(content: string) {
   }
 }
 
-export type AIState = {
-  chatId: string
-  messages: Message[]
-}
-
-export type UIState = {
-  id: string
-  display: React.ReactNode
-}[]
 
 export const AI = createAI<AIState, UIState>({
   actions: {
@@ -712,16 +716,4 @@ export const AI = createAI<AIState, UIState>({
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },
-  onGetUIState: async () => {
-    'use server'
-
-      return
-    
-  },
-  onSetAIState: async ({ state }) => {
-    'use server'
-
-      return
-
-  }
 })

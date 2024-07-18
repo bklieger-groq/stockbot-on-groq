@@ -9,9 +9,6 @@ import {
   IconSeparator,
   IconVercel
 } from '@/components/ui/icons'
-import { UserMenu } from '@/components/user-menu'
-import { SidebarMobile } from './sidebar-mobile'
-import { SidebarToggle } from './sidebar-toggle'
 import { Session } from '@/lib/types'
 
 async function UserOrLogin() {

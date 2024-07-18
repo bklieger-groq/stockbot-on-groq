@@ -5,7 +5,7 @@ import { Session } from '@/lib/types'
 import { getMissingKeys } from '@/app/actions'
 
 export const metadata = {
-  title: 'Next.js AI Chatbot'
+  title: 'Groq + Next.js AI Chatbot'
 }
 
 export default async function IndexPage() {
