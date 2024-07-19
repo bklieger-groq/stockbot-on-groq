@@ -64,10 +64,10 @@ const TOOL_MODEL = 'llama3-70b-8192';
     // llama3-groq-70b-8192-tool-use-preview
 
 
-async function generateCaption(symbol: string, toolName: string, aiState: MutableAIState): Promise<string> {
+async function generateCaption(symbol: string, toolName: string, aiState: MutableAIState, groqApiKey: string): Promise<string> {
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
-    apiKey: process.env.GROQ_API_KEY,
+    apiKey: groqApiKey,
   });
 
   aiState.update({
@@ -144,7 +144,7 @@ async function generateCaption(symbol: string, toolName: string, aiState: Mutabl
   return response.text || '';
 }
 
-async function submitUserMessage(content: string) {
+async function submitUserMessage(content: string, groqApiKey: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
@@ -166,9 +166,9 @@ async function submitUserMessage(content: string) {
 
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
-    apiKey: process.env.GROQ_API_KEY,
+    apiKey: groqApiKey,
   });
-
+  
   const result = await streamUI({
     model: groq(TOOL_MODEL),
     initial: <SpinnerMessage />,
@@ -347,7 +347,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          const caption = await generateCaption(symbol,"showStockChart",aiState);
+          const caption = await generateCaption(symbol,"showStockChart",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>
@@ -406,7 +406,7 @@ async function submitUserMessage(content: string) {
               }
             ]
           })
-          const caption = await generateCaption(symbol,"showStockPrice",aiState);
+          const caption = await generateCaption(symbol,"showStockPrice",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>
@@ -466,7 +466,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          const caption = await generateCaption(symbol,"StockFinancials",aiState);
+          const caption = await generateCaption(symbol,"StockFinancials",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>
@@ -527,7 +527,7 @@ async function submitUserMessage(content: string) {
             ]
           })
 
-          const caption = await generateCaption(symbol,"showStockNews",aiState);
+          const caption = await generateCaption(symbol,"showStockNews",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>
@@ -582,7 +582,7 @@ async function submitUserMessage(content: string) {
               }
             ]
           })
-          const caption = await generateCaption("Generic","showStockScreener",aiState);
+          const caption = await generateCaption("Generic","showStockScreener",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>
@@ -636,7 +636,7 @@ async function submitUserMessage(content: string) {
               }
             ]
           })
-          const caption = await generateCaption("Generic","showMarketOverview",aiState);
+          const caption = await generateCaption("Generic","showMarketOverview",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>
@@ -690,7 +690,7 @@ async function submitUserMessage(content: string) {
               }
             ]
           })
-          const caption = await generateCaption("Generic","showMarketHeatmap",aiState);
+          const caption = await generateCaption("Generic","showMarketHeatmap",aiState,groqApiKey=groqApiKey);
 
           return (
             <BotCard>

@@ -18,6 +18,9 @@ import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
 
+import { useLocalStorage } from '@/lib/hooks/use-local-storage'
+
+
 export function PromptForm({
   input,
   setInput
@@ -30,6 +33,7 @@ export function PromptForm({
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
+  const [apiKey, setApiKey] = useLocalStorage('groqKey', '');
 
   React.useEffect(() => {
     if (inputRef.current) {
@@ -62,7 +66,7 @@ export function PromptForm({
         ])
 
         // Submit and get response message
-        const responseMessage = await submitUserMessage(value)
+        const responseMessage = await submitUserMessage(value,apiKey)
         setMessages(currentMessages => [...currentMessages, responseMessage])
       }}
     >
