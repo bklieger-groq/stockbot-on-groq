@@ -1,3 +1,33 @@
+<h2 align="center">
+ <br>
+ <img src="https://i.imgur.com/9DrrhG4.png" alt="AI StockBot Powered by Groq with Tool Use and Generative UI" width="150">
+ <br>
+ <br>
+ StockBot Powered by Groq: Lightning Fast AI Chatbot that Responds With Interactive Stock Charts, Financials, News, and Screeners. 
+ <br>
+</h2>
+
+<p align="center">
+ <a href="https://github.com/bklieger-groq/stockbot-on-groq/stargazers"><img src="https://img.shields.io/github/stars/bklieger/groqnotes"></a>
+ <a href="https://github.com/bklieger-groq/stockbot-on-groq/blob/main/LICENSE.md">
+ <img src="https://img.shields.io/badge/License-MIT-green.svg">
+ </a>
+</p>
+
+<p align="center">
+ <a href="#Overview">Overview</a> •
+ <a href="#Features">Features</a> •
+ <a href="#Quickstart">Quickstart</a> •
+ <a href="#Contributing">Contributing</a>
+</p>
+
+<br>
+
+[Demo of StockBot]()
+
+> Demo of StockBot fast transcription of audio and generation of structured notes
+
+
 <h1 align="center">Next.js AI Chatbot with Groq [🚧 In Development]</h1>
 
 [Demo of Groq Gen UI](https://github.com/user-attachments/assets/52a18836-2af9-4669-8931-83fb1813b9b6)
