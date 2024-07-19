@@ -12,17 +12,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
       )}
       {...props}
     >
-      Open source AI StockBot built with{' '}
-      <ExternalLink href="https://github.com/vercel/ai">
-        Vercel AI SDK
-      </ExternalLink>{' '}powered by{' '}
-      <ExternalLink href="https://groq.com">
-        Groq
-      </ExternalLink>{' '}and{' '}
-      <ExternalLink href="https://groq.com">
-        TradingView
-      </ExternalLink>
-      .
+      StockBot may provide inaccurate information and does not provide investment advice.
     </p>
   )
 }
