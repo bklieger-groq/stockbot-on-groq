@@ -38,7 +38,7 @@ async function UserOrLogin() {
           className={cn(buttonVariants({ variant: 'ghost' }))}
           style={{borderRadius:0, color:"#F55036",padding:"4px"}}
         >
-          <span className="hidden md:flex">Start New Chat</span>
+          <span className="flex">Start New Chat</span>
         </a>
       </div>
     </>

@@ -30,7 +30,6 @@ export function ChatPanel({
   const [aiState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
   const { submitUserMessage } = useActions()
-  const [shareDialogOpen, setShareDialogOpen] = React.useState(false)
 
   const exampleMessages = [
     {
@@ -39,30 +38,30 @@ export function ChatPanel({
       message: `What is the price of Apple stock?`
     },
     {
-      heading: 'Show me a stock chart',
-      subheading: 'for $GOOGL',
-      message: 'Show me a stock chart for $GOOGL'
-    },
+        heading: 'Show me a stock chart',
+        subheading: 'for $GOOGL',
+        message: 'Show me a stock chart for $GOOGL'
+      },
     {
-      heading: `What are Microsoft's`,
-      subheading: 'latest financials?',
-      message: `What are Microsoft's latest financials?`
-    },
+        heading: 'What are some recent',
+        subheading: `events about Amazon?`,
+        message: `What are some recent events about Amazon?`
+      },
     {
-      heading: 'Show me a screener',
-      subheading: 'to find new stocks',
-      message: 'Show me a screener to find new stocks'
-    },
+        heading: `What are Microsoft's`,
+        subheading: 'latest financials?',
+        message: `What are Microsoft's latest financials?`
+      },
     {
       heading: 'How is the stock market',
       subheading: 'performing today by sector?',
       message: `How is the stock market performing today by sector?`
     },
     {
-      heading: 'What are some recent',
-      subheading: `events about Amazon?`,
-      message: `What are some recent events about Amazon?`
-    }
+        heading: 'Show me a screener',
+        subheading: 'to find new stocks',
+        message: 'Show me a screener to find new stocks'
+    },
   ]
 
   return (
@@ -78,9 +77,12 @@ export function ChatPanel({
             exampleMessages.map((example, index) => (
               <div
                 key={example.heading}
-                className={`cursor-pointer border bg-white p-4 hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900 ${
-                  index > 1 && 'hidden md:block'
-                }`}
+                className={`
+                    cursor-pointer border bg-white p-4 
+                    hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900
+                    ${index >= 4 ? 'hidden md:block' : ''}
+                    ${index >= 2 ? 'hidden 2xl:block' : ''}
+                  `}
                 onClick={async () => {
                   setMessages(currentMessages => [
                     ...currentMessages,
@@ -107,24 +109,6 @@ export function ChatPanel({
               </div>
             ))}
         </div>
-
-        {messages?.length >= 2 ? (
-          <div className="flex h-12 items-center justify-center">
-            <div className="flex space-x-2">
-              {id && title ? (
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={() => setShareDialogOpen(true)}
-                  >
-                    <IconShare className="mr-2" />
-                    Share
-                  </Button>
-                </>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
 
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:border md:py-4">
           <PromptForm input={input} setInput={setInput} />

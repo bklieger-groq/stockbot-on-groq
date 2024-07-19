@@ -68,7 +68,12 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
       <TickerTape/>)}
 
       <div
-        className={cn('pb-[200px] pt-4 md:pt-10', className)}
+        className={cn(
+          messages.length 
+            ? 'pb-[200px] pt-4 md:pt-6' 
+            : 'pb-[200px] pt-0',
+          className
+        )}
         ref={messagesRef}
       >
         {messages.length ? (
