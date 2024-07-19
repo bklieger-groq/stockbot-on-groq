@@ -14,10 +14,10 @@ export const metadata = {
     ? new URL(`https://${process.env.VERCEL_URL}`)
     : undefined,
   title: {
-    default: 'Next.js AI Chatbot',
-    template: `%s - Next.js AI Chatbot`
+    default: 'StockBot on GroqLabs',
+    template: `%s - StockBot on GroqLabs`
   },
-  description: 'An AI-powered chatbot template built with Next.js and Vercel.',
+  description: 'Lightning Fast AI Chatbot that Responds With Live Interactive Stock Charts, Financials, News, Screeners, and More.',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',

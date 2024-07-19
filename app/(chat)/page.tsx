@@ -5,7 +5,7 @@ import { Session } from '@/lib/types'
 import { getMissingKeys } from '@/app/actions'
 
 export const metadata = {
-  title: 'Groq + Next.js AI Chatbot'
+  title: 'StockBot on GroqLabs'
 }
 
 export default async function IndexPage() {
