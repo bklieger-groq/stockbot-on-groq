@@ -40,7 +40,18 @@ GroqNotes is a streamlit app that scaffolds the creation of structured lecture n
 - ⚡ **Groq-Powered Performance**: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience
 - 🌐 **Multi-Asset Market Coverage**: Access comprehensive data and analysis across stocks, forex, bonds, and cryptocurrencies
 
-### Widgets
+## Widgets
+
+| Widget | Description |
+|--------|-------------|
+| ![Heatmap of Daily Market Performance](https://github.com/user-attachments/assets/2e3919a3-280b-4be4-adcd-a1ff636bff3e) | **Heatmap of Daily Market Performance**<br>Visualize market trends at a glance with our interactive heatmap. |
+| ![Breakdown of Financial Data for Stocks](https://github.com/user-attachments/assets/c1c32dac-8295-4efb-ac1e-2eea8a89e7db) | **Breakdown of Financial Data for Stocks**<br>Get detailed financial metrics and key performance indicators for any stock. |
+| ![Price History of Stock](https://github.com/user-attachments/assets/f588068e-4d95-4188-96fd-866d355c993e) | **Price History of Stock**<br>Track the historical price movement of stocks with customizable date ranges. |
+| ![Candlestick Stock Charts for Specific Assets](https://github.com/user-attachments/assets/ce9ea4a8-a1fe-4ce7-be60-3f5d64d50ced) | **Candlestick Stock Charts for Specific Assets**<br>Analyze price patterns and trends with our detailed candlestick charts. |
+| ![Top Stories for Specific Stock](https://github.com/user-attachments/assets/fa0693f4-8eca-4d5c-90e7-42afda0d8acc) | **Top Stories for Specific Stock**<br>Stay informed with the latest news and headlines affecting your chosen stocks. |
+| ![Stock Screener to Find New Stocks and ETFs](https://github.com/user-attachments/assets/8ecadec9-69a1-4e18-a9fe-7b30df9f6ff5) | **Stock Screener to Find New Stocks and ETFs**<br>Discover new investment opportunities with our powerful stock screening tool. |
+
+
 
 <img width="737" alt="Heatmap of Daily Market Performance" src="https://github.com/user-attachments/assets/2e3919a3-280b-4be4-adcd-a1ff636bff3e">
 > Heatmap of Daily Market Performance
