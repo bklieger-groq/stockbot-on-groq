@@ -8,7 +8,7 @@
 </h2>
 
 <p align="center">
- <a href="https://github.com/bklieger-groq/stockbot-on-groq/stargazers"><img src="https://img.shields.io/github/stars/bklieger/groqnotes"></a>
+ <a href="https://github.com/bklieger-groq/stockbot-on-groq/stargazers"><img src="https://img.shields.io/github/stars/bklieger-groq/stockbot-on-groq"></a>
  <a href="https://github.com/bklieger-groq/stockbot-on-groq/blob/main/LICENSE.md">
  <img src="https://img.shields.io/badge/License-MIT-green.svg">
  </a>
