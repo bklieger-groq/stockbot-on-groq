@@ -12,6 +12,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useScrollAnchor } from '@/lib/hooks/use-scroll-anchor'
 import { toast } from 'sonner'
 import { TickerTape } from '@/components/tradingview/ticker-tape'
+import { MissingApiKeyBanner } from '@/components/missing-api-key-banner'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
@@ -64,7 +65,8 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
       className="group w-full overflow-auto pl-0 peer-[[data-state=open]]:lg:pl-[250px] peer-[[data-state=open]]:xl:pl-[300px]"
       ref={scrollRef}
     >
-      {messages.length ? (<></>):(
+      
+      {messages.length ? <MissingApiKeyBanner/>:(
       <TickerTape/>)}
 
       <div
