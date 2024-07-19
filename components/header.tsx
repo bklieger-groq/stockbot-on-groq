@@ -20,7 +20,7 @@ async function UserOrLogin() {
           <IconGroq className="hidden size-6 mr-2 dark:block" />
         </Link>
       
-      <div className="flex items-center">
+      <div className="flex items-center font-semibold">
         
         <IconSeparator className="size-6 text-muted-foreground/50" />
           <a href="/new">StockBot on Groq</a>
