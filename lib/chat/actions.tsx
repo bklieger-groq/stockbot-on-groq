@@ -63,6 +63,7 @@ async function generateCaption(symbol: string, toolName: string, aiState: Mutabl
       ...aiState.get().messages
     ]
   })
+
   const captionSystemMessage = `\
     You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
     
@@ -113,22 +114,25 @@ async function generateCaption(symbol: string, toolName: string, aiState: Mutabl
     `
   // Assistant (you): Here is the price of AAPL stock. Would you like to see a chart of AAPL or get more information about its financials?
 
-  const response = await generateText({
-    model: groq(MODEL),
-    messages: [
-      {
-        role: 'system',
-        content: captionSystemMessage
-      },
-      ...aiState.get().messages.map((message: any) => ({
-        role: message.role,
-        content: message.content,
-        name: message.name
-      }))
-    ]
+  try {
+    const response = await generateText({
+      model: groq(MODEL),
+      messages: [
+        {
+          role: 'system',
+          content: captionSystemMessage
+        },
+        ...aiState.get().messages.map((message: any) => ({
+          role: message.role,
+          content: message.content,
+          name: message.name
+        }))
+      ]
   });
-
   return response.text || '';
+  } catch(err){
+    return ''; // Send tool use without caption.
+  }
 }
 
 async function submitUserMessage(content: string, groqApiKey: string) {
@@ -161,6 +165,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
   const result = await streamUI({
     model: groq(TOOL_MODEL),
     initial: <SpinnerMessage />,
+    maxRetries: 1,
     system: `\
     You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
     
@@ -359,7 +364,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ symbol }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <></>
             </BotCard>
           )
 
@@ -697,7 +702,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
     display: result.value
   }
 } catch (err: any) {
-  console.log("Error: ",err);
+  console.log("Error: ",err.message);
   return (
     {id: nanoid(),display:(
       <div className="border p-4">
