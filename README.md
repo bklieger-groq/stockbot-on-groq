@@ -17,7 +17,7 @@
 
 <br>
 
-[Demo of StockBot](https://github.com/user-attachments/assets/a0d16c82-6a64-42c7-92c6-50194d41f0f6)
+[Demo of StockBot](https://github.com/user-attachments/assets/5bcb0f0d-1255-4ccd-b1c2-82cc841abb53)
 > Demo of StockBot providing relevant, live, and interactive stock charts and interfaces
 
 ## Overview
