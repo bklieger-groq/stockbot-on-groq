@@ -27,6 +27,9 @@
 
 > Demo of StockBot fast transcription of audio and generation of structured notes
 
+StockBot Powered by Groq: Lightning Fast AI Chatbot with Live, Interactive Market Data
+ StockBot Powered by Groq: Lightning Fast AI Chatbot that Responds With Interactive Stock Charts, Financials, News, and Screeners. 
+
 
 <h1 align="center">Next.js AI Chatbot with Groq [🚧 In Development]</h1>
 
