@@ -3,37 +3,23 @@ import 'server-only'
 import { generateText } from 'ai';
 import {
   createAI,
-  createStreamableUI,
   getMutableAIState,
-  getAIState,
   streamUI,
   createStreamableValue
 } from 'ai/rsc'
 import { createOpenAI } from '@ai-sdk/openai'
 
 import {
-  spinner,
   BotCard,
   BotMessage,
-  SystemMessage,
-  Stock,
-  Purchase
 } from '@/components/stocks'
 
 import { z } from 'zod'
-import { EventsSkeleton } from '@/components/stocks/events-skeleton'
-import { Events } from '@/components/stocks/events'
-import { StocksSkeleton } from '@/components/stocks/stocks-skeleton'
-import { Stocks } from '@/components/stocks/stocks'
-import { StockSkeleton } from '@/components/stocks/stock-skeleton'
 import {
-  formatNumber,
-  runAsyncFnWithoutBlocking,
-  sleep,
   nanoid
 } from '@/lib/utils'
-import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
-import { Chat, Message } from '@/lib/types'
+import { SpinnerMessage } from '@/components/stocks/message'
+import { Message } from '@/lib/types'
 import { StockChart } from '@/components/tradingview/stock-chart'
 import { StockPrice } from '@/components/tradingview/stock-price'
 import { StockNews } from '@/components/tradingview/stock-news'
@@ -41,6 +27,7 @@ import { StockFinancials } from '@/components/tradingview/stock-financials'
 import { StockScreener } from '@/components/tradingview/stock-screener'
 import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
+import { toast } from 'sonner'
 
 export type AIState = {
   chatId: string
@@ -163,6 +150,8 @@ async function submitUserMessage(content: string, groqApiKey: string) {
 
   let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
   let textNode: undefined | React.ReactNode
+
+  try {
 
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
@@ -310,7 +299,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ symbol }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <></>
             </BotCard>
           )
 
@@ -429,7 +418,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ symbol }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+             <></>
             </BotCard>
           )
 
@@ -490,7 +479,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ symbol }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <></>
             </BotCard>
           )
 
@@ -546,7 +535,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <></>
             </BotCard>
           )
 
@@ -600,7 +589,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <></>
             </BotCard>
           )
 
@@ -654,7 +643,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
         generate: async function* ({ }) {
           yield (
             <BotCard>
-              <StockSkeleton />
+              <></>
             </BotCard>
           )
 
@@ -707,8 +696,26 @@ async function submitUserMessage(content: string, groqApiKey: string) {
     id: nanoid(),
     display: result.value
   }
+} catch (err: any) {
+  console.log("Error: ",err);
+  return (
+    {id: nanoid(),display:(
+      <div className="border p-4">
+<div className="text-red-700 font-medium">
+  Error: {err.message}
+</div>
+<a 
+      href="https://github.com/bklieger-groq/stockbot-on-groq/issues"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center text-sm text-red-800 hover:text-red-900"
+    >
+      If you think something has gone wrong, create an<span className="ml-1" style={{textDecoration:"underline"}}>{' '}issue on Github.</span>
+    </a>
+    </div>
+)})
+  };
 }
-
 
 export const AI = createAI<AIState, UIState>({
   actions: {

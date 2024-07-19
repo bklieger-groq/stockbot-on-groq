@@ -111,11 +111,12 @@ export function ChatPanel({
                   const responseMessage = await submitUserMessage(
                     example.message,apiKey
                   )
-
+                console.log("Response: ",responseMessage);
                   setMessages(currentMessages => [
                     ...currentMessages,
                     responseMessage
                   ])
+
                 }}
               >
                 <div className="text-sm font-semibold">{example.heading}</div>
