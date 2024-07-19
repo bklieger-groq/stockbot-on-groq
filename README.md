@@ -31,9 +31,8 @@ StockBot Powered by Groq: Lightning Fast AI Chatbot with Live, Interactive Marke
  StockBot Powered by Groq: Lightning Fast AI Chatbot that Responds With Interactive Stock Charts, Financials, News, and Screeners. 
 
 
-<h1 align="center">Next.js AI Chatbot with Groq [🚧 In Development]</h1>
+[Demo of StockBot](https://github.com/user-attachments/assets/ddad1bf1-8770-4c69-9c32-08182f0e8af7)
 
-[Demo of Groq Gen UI](https://github.com/user-attachments/assets/52a18836-2af9-4669-8931-83fb1813b9b6)
 
 > [!IMPORTANT]
 >  Note: StockBot may provide inaccurate information and does not provide investment advice.
