@@ -1,6 +1,6 @@
 <h2 align="center">
  <br>
- <img src="https://i.imgur.com/02BGOIW.png" alt="AI StockBot Powered by Groq with Tool Use and Generative UI" width="150">
+ <img src="https://i.imgur.com/f1C7EdN.png" alt="AI StockBot Powered by Groq with Tool Use and Generative UI" width="150">
  <br>
  <br>
  StockBot on GroqLabs: Lightning Fast AI Chatbot that Responds With Live Interactive Stock Charts, Financials, News, Screeners, and More. 
@@ -23,15 +23,12 @@
 
 <br>
 
-[Demo of StockBot]()
+[Demo of StockBot](https://github.com/user-attachments/assets/a0d16c82-6a64-42c7-92c6-50194d41f0f6)
+> Demo of StockBot providing relevant, live, and interactive stock charts and interfaces
 
-> Demo of StockBot fast transcription of audio and generation of structured notes
 
 StockBot Powered by Groq: Lightning Fast AI Chatbot with Live, Interactive Market Data
  StockBot Powered by Groq: Lightning Fast AI Chatbot that Responds With Interactive Stock Charts, Financials, News, and Screeners. 
-
-
-[Demo of StockBot](https://github.com/user-attachments/assets/ddad1bf1-8770-4c69-9c32-08182f0e8af7)
 
 
 > [!IMPORTANT]
