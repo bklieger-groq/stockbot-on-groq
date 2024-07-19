@@ -2,6 +2,6 @@
 
 import { redirect } from 'next/navigation'
 
-export default async function NewPage() {
+export default function NewPage() {
   redirect('/')
 }
