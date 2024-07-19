@@ -49,7 +49,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Toaster position="top-center" />
         <Providers
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Header />
             <main className="flex flex-col flex-1 bg-muted/50">{children}</main>
           </div>
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           
         </Providers>
       </body>
