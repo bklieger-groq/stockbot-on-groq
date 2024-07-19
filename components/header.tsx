@@ -31,7 +31,15 @@ async function UserOrLogin() {
         
         <IconSeparator className="size-6 text-muted-foreground/50" />
           <a href="/new">StockBot</a>
-        
+          <IconSeparator className="size-6 text-muted-foreground/50" />
+          <a
+          href="/new"
+          rel="noopener noreferrer"
+          className={cn(buttonVariants({ variant: 'ghost' }))}
+          style={{borderRadius:0, color:"#F55036",padding:"4px"}}
+        >
+          <span className="hidden md:flex">Start New Chat</span>
+        </a>
       </div>
     </>
   )
@@ -51,6 +59,7 @@ export function Header() {
           href="https://github.com/bklieger-groq/groq-gen-ui/"
           rel="noopener noreferrer"
           className={cn(buttonVariants({ variant: 'outline' }))}
+          style={{borderRadius:0}}
         >
           <IconGitHub />
           <span className="hidden ml-2 md:flex">GitHub</span>
