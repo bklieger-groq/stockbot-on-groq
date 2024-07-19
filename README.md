@@ -11,9 +11,7 @@
  <a href="#Overview">Overview</a> •
  <a href="#Features">Features</a> •
  <a href="#Quickstart">Quickstart</a> •
- <a href="#Contributing">Contributing</a> •
- <a href="https://github.com/bklieger-groq/stockbot-on-groq/stargazers"><img src="https://img.shields.io/github/stars/bklieger-groq/stockbot-on-groq" style="margin-top:2px;"></a>
-
+ <a href="#Contributing">Contributing</a>
 </p>
 
 <br>
@@ -36,12 +34,11 @@ GroqNotes is a streamlit app that scaffolds the creation of structured lecture n
 
 ### Features
 
-- 🎧 Generate structured notes using transcribed audio by Whisper-large and text by Llama3
-- ⚡ Lightning fast speed transcribing audio and generating text using Groq
-- 📖 Scaffolded prompting strategically switches between Llama3-70b and Llama3-8b to balance speed and quality
-- 🖊️ Markdown styling creates aesthetic notes on the streamlit app that can include tables and code 
-- 📂 Allows user to download a text or PDF file with the entire notes contents
-
+- 🤖 Real-time AI Chatbot: Engage with AI powered by Llama3 70b to request stock news, information, and charts through natural language conversation
+- 📊 Interactive Stock Charts: Receive near-instant, context-aware responses with interactive TradingView charts that host live data
+- 🔄 Adaptive Interface: Dynamically render TradingView UI components for financial interfaces tailored to your specific query
+- ⚡ Groq-Powered Performance: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience
+- 🌐 Multi-Asset Market Coverage: Access comprehensive data and analysis across stocks, forex, bonds, and cryptocurrencies
 
 ### Widgets
 
