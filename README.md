@@ -3,7 +3,7 @@
  <img src="https://i.imgur.com/9DrrhG4.png" alt="AI StockBot Powered by Groq with Tool Use and Generative UI" width="150">
  <br>
  <br>
- StockBot Powered by Groq: Lightning Fast AI Chatbot that Responds With Interactive Stock Charts, Financials, News, and Screeners. 
+ StockBot on GroqLabs: Lightning Fast AI Chatbot that Responds With Live Interactive Stock Charts, Financials, News, Screeners, and More. 
  <br>
 </h2>
 
