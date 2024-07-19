@@ -16,7 +16,7 @@ async function UserOrLogin() {
   return (
     <>
 
-        <Link href="/new" rel="nofollow">
+        <Link href="https://wow.groq.com/groq-labs/" rel="nofollow">
           {/* <IconGroq className="size-6 mr-2 dark:hidden" />
           <IconGroq className="hidden size-6 mr-2 dark:block" /> */}
           <Image
