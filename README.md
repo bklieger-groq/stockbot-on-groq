@@ -34,15 +34,31 @@ GroqNotes is a streamlit app that scaffolds the creation of structured lecture n
 
 ### Features
 
-- 🤖 Real-time AI Chatbot: Engage with AI powered by Llama3 70b to request stock news, information, and charts through natural language conversation
-- 📊 Interactive Stock Charts: Receive near-instant, context-aware responses with interactive TradingView charts that host live data
-- 🔄 Adaptive Interface: Dynamically render TradingView UI components for financial interfaces tailored to your specific query
-- ⚡ Groq-Powered Performance: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience
-- 🌐 Multi-Asset Market Coverage: Access comprehensive data and analysis across stocks, forex, bonds, and cryptocurrencies
+- 🤖 **Real-time AI Chatbot**: Engage with AI powered by Llama3 70b to request stock news, information, and charts through natural language conversation
+- 📊 **Interactive Stock Charts**: Receive near-instant, context-aware responses with interactive TradingView charts that host live data
+- 🔄 **Adaptive Interface**: Dynamically render TradingView UI components for financial interfaces tailored to your specific query
+- ⚡ **Groq-Powered Performance**: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience
+- 🌐 **Multi-Asset Market Coverage**: Access comprehensive data and analysis across stocks, forex, bonds, and cryptocurrencies
 
 ### Widgets
 
+<img width="737" alt="Heatmap of Daily Market Performance" src="https://github.com/user-attachments/assets/2e3919a3-280b-4be4-adcd-a1ff636bff3e">
+> Heatmap of Daily Market Performance
 
+<img width="742" alt="Breakdown of Financial Data for Stocks" src="https://github.com/user-attachments/assets/c1c32dac-8295-4efb-ac1e-2eea8a89e7db">
+> Breakdown of Financial Data for Stocks
+
+<img width="743" alt="Price History of Stock" src="https://github.com/user-attachments/assets/f588068e-4d95-4188-96fd-866d355c993e">
+> Price History of Stock
+
+<img width="771" alt="Candlestick Stock Charts for Specific Assets" src="https://github.com/user-attachments/assets/ce9ea4a8-a1fe-4ce7-be60-3f5d64d50ced">
+> Candlestick Stock Charts for Specific Assets
+
+<img width="777" alt="Top Stories for Specific Stock" src="https://github.com/user-attachments/assets/fa0693f4-8eca-4d5c-90e7-42afda0d8acc">
+> Top Stories for Specific Stock
+
+<img width="772" alt="Stock Screener to Find New Stocks and ETFs" src="https://github.com/user-attachments/assets/8ecadec9-69a1-4e18-a9fe-7b30df9f6ff5">
+> Stock Screener to Find New Stocks and ETFs
 
 
 ## Quickstart
