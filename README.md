@@ -8,10 +8,7 @@
 </h2>
 
 <p align="center">
- <a href="https://github.com/bklieger-groq/stockbot-on-groq/stargazers"><img src="https://img.shields.io/github/stars/bklieger-groq/stockbot-on-groq"></a>
-</p>
-
-<p align="center">
+  <a href="https://github.com/bklieger-groq/stockbot-on-groq/stargazers"><img src="https://img.shields.io/github/stars/bklieger-groq/stockbot-on-groq"></a> •
  <a href="#Overview">Overview</a> •
  <a href="#Features">Features</a> •
  <a href="#Quickstart">Quickstart</a> •
