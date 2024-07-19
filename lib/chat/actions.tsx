@@ -65,52 +65,52 @@ async function generateCaption(symbol: string, toolName: string, aiState: Mutabl
   })
 
   const captionSystemMessage = `\
-    You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
-    
-    These are the tools you have available:
-    1. showStockFinancials
-    This tool shows the financials for a given stock.
+You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
 
-    2. showStockChart
-    This tool shows a stock chart for a given stock or currency.
+These are the tools you have available:
+1. showStockFinancials
+This tool shows the financials for a given stock.
 
-    3. showStockPrice
-    This tool shows the price of a stock or currency.
-    
-    4. showStockNews
-    This tool shows the latest news and events for a stock or cryptocurrency.
+2. showStockChart
+This tool shows a stock chart for a given stock or currency.
 
-    5. showStockScreener
-    This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.
+3. showStockPrice
+This tool shows the price of a stock or currency.
 
-    6. showMarketOverview
-    This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
+4. showStockNews
+This tool shows the latest news and events for a stock or cryptocurrency.
 
-    7. showMarketHeatmap
-    This tool shows a heatmap of today's stock market performance across sectors.
+5. showStockScreener
+This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.
 
-    You have just called a tool (`+toolName+` for `+symbol+`) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
-      
-    Example:
+6. showMarketOverview
+This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
 
-    User: What is the price of AAPL?
-    Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
-    
-    Assistant (you): The price of AAPL stock is provided above. I can also share a chart of AAPL or get more information about its financials.
+7. showMarketHeatmap
+This tool shows a heatmap of today's stock market performance across sectors.
 
-    or
+You have just called a tool (`+toolName+` for `+symbol+`) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
+  
+Example:
 
-    Assistant (you): This is the price of AAPL stock. I can also generate a chart or share further financial data.
+User: What is the price of AAPL?
+Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
 
-    or 
-    Assistant (you): Would you like to see a chart of AAPL or get more information about its financials?
+Assistant (you): The price of AAPL stock is provided above. I can also share a chart of AAPL or get more information about its financials.
 
-    ## Guidelines
-    Talk like one of the above responses, but BE CREATIVE and generate a DIVERSE response. 
-    
-    Your response should be BRIEF, about 2-3 sentences.
+or
 
-    Besides the symbol, you cannot customize any of the screeners or graphics. Do not tell the user that you can.
+Assistant (you): This is the price of AAPL stock. I can also generate a chart or share further financial data.
+
+or 
+Assistant (you): Would you like to see a chart of AAPL or get more information about its financials?
+
+## Guidelines
+Talk like one of the above responses, but BE CREATIVE and generate a DIVERSE response. 
+
+Your response should be BRIEF, about 2-3 sentences.
+
+Besides the symbol, you cannot customize any of the screeners or graphics. Do not tell the user that you can.
     `
   // Assistant (you): Here is the price of AAPL stock. Would you like to see a chart of AAPL or get more information about its financials?
 
@@ -162,101 +162,96 @@ async function submitUserMessage(content: string, groqApiKey: string) {
     apiKey: groqApiKey,
   });
   
+  // ### Example function calling:
+  // 1. showStockFinancials
+  // This tool shows the financials for a given stock.
+  // Parameters:
+  // symbol: The name or symbol of the stock or currency (string).
+  // Prompt Example:
+  //   {
+  //   "toolName": "showStockChart",
+  //   "args": {
+  //     "symbol": "AAPL",
+  //   }
+  //   }
+  // 2. showStockChart
+  // This tool shows a stock chart for a given stock or currency.
+  // Parameters:
+  // symbol: The name or symbol of the stock or currency (string).
+  // Prompt Example:
+  //   {
+  //   "toolName": "showStockChart",
+  //   "args": {
+  //     "symbol": "AAPL",
+  //   }
+  //   }
+  // 3. showStockPrice
+  // This tool shows the price of a stock or currency.
+  // Parameters:
+  // symbol: The name or symbol of the stock or currency (string).
+  // Prompt Example:
+  //   {
+  //   "toolName": "showStockPrice",
+  //   "args": {
+  //     "symbol": "TSLA",
+  //   }
+  // }
+  // 4. showStockNews
+  // This tool shows the latest news and events for a stock or cryptocurrency.
+  // Parameters:
+  // symbol: The name or symbol of the stock or currency (string).
+  // Prompt Example:
+  //   {
+  //   "toolName": "showStockNews",
+  //   "args": {
+  //     "symbol": "TSLA",
+  //   }
+  // }
+  // 5. showStockScreener
+  // This tool shows a stock screener which the user can use to filter stocks based upon financials and technicals.
+  // Parameters:
+  // *none*
+  // Prompt Example:
+  //   {
+  //   "toolName": "showStockScreener",
+  //   "args": {}
+  // }
+  // 6. showMarketOverview
+  // This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
+  // Parameters:
+  // *none*
+  // Prompt Example:
+  //   {
+  //   "toolName": "showMarketOverview",
+  //   "args": {}
+  // }
+  // 7. showMarketHeatmap
+  // This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.
+  // Parameters:
+  // *none*
+  // Prompt Example:
+  //   {
+  //   "toolName": "showMarketHeatmap",
+  //   "args": {}
+  // }
+
   const result = await streamUI({
     model: groq(TOOL_MODEL),
     initial: <SpinnerMessage />,
     maxRetries: 1,
     system: `\
-    You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
-    
-    ### Example function calling:
-    1. showStockFinancials
-    This tool shows the financials for a given stock.
-    Parameters:
-    symbol: The name or symbol of the stock or currency (string).
-    Prompt Example:
-      {
-      "toolName": "showStockChart",
-      "args": {
-        "symbol": "AAPL",
-      }
-      }
-    2. showStockChart
-    This tool shows a stock chart for a given stock or currency.
-    Parameters:
-    symbol: The name or symbol of the stock or currency (string).
-    Prompt Example:
-      {
-      "toolName": "showStockChart",
-      "args": {
-        "symbol": "AAPL",
-      }
-      }
-    3. showStockPrice
-    This tool shows the price of a stock or currency.
-    Parameters:
-    symbol: The name or symbol of the stock or currency (string).
-    Prompt Example:
-      {
-      "toolName": "showStockPrice",
-      "args": {
-        "symbol": "TSLA",
-      }
-    }
-    4. showStockNews
-    This tool shows the latest news and events for a stock or cryptocurrency.
-    Parameters:
-    symbol: The name or symbol of the stock or currency (string).
-    Prompt Example:
-      {
-      "toolName": "showStockNews",
-      "args": {
-        "symbol": "TSLA",
-      }
-    }
-    5. showStockScreener
-    This tool shows a stock screener which the user can use to filter stocks based upon financials and technicals.
-    Parameters:
-    *none*
-    Prompt Example:
-      {
-      "toolName": "showStockScreener",
-      "args": {}
-    }
-    6. showMarketOverview
-    This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
-    Parameters:
-    *none*
-    Prompt Example:
-      {
-      "toolName": "showMarketOverview",
-      "args": {}
-    }
-    7. showMarketHeatmap
-    This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.
-    Parameters:
-    *none*
-    Prompt Example:
-      {
-      "toolName": "showMarketHeatmap",
-      "args": {}
-    }
-    
-    ### Date formatting:
-    For any dates, use the format YYYY-MM-DD.
-    
-    Example: 2022-01-01
+You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
 
-    ### Cryptocurrency Tickers
-    For any cryptocurrency, append "USD" at the end of the ticker when using functions. For instance, "DOGE" should be "DOGEUSD".
+### Cryptocurrency Tickers
+For any cryptocurrency, append "USD" at the end of the ticker when using functions. For instance, "DOGE" should be "DOGEUSD".
 
-    ### Guidelines:
+### Guidelines:
 
-    Never provide empty results to the user. Provide the relevant tool if it matches the user's request. Otherwise, respond as the stock bot.
-    Example:
+Never provide empty results to the user. Provide the relevant tool if it matches the user's request. Otherwise, respond as the stock bot.
+Example:
 
-    User: What is the price of AAPL?
-    Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
+User: What is the price of AAPL?
+Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
     `,
     messages: [
       ...aiState.get().messages.map((message: any) => ({
