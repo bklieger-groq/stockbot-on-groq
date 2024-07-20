@@ -2,6 +2,7 @@
 
 local.env
 *.env
+tsconfig.tsbuildinfo
 
 # dependencies
 node_modules

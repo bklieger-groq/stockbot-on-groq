@@ -1,16 +1,17 @@
-"use client"
+'use client'
 
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo } from 'react'
 
 export function StockPrice({ props: symbol }: { props: string }) {
-  const container = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!container.current) return;
-    const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";
-    script.type = "text/javascript";
-    script.async = true;
+    if (!container.current) return
+    const script = document.createElement('script')
+    script.src =
+      'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js'
+    script.type = 'text/javascript'
+    script.async = true
     script.innerHTML = `
       {
         "symbols": [
@@ -51,32 +52,36 @@ export function StockPrice({ props: symbol }: { props: string }) {
           "60m|1W",
           "all|1M"
         ]
-      }`;
+      }`
 
-    container.current.appendChild(script);
+    container.current.appendChild(script)
 
     return () => {
       if (container.current) {
-        const scriptElement = container.current.querySelector('script');
+        const scriptElement = container.current.querySelector('script')
         if (scriptElement) {
-          container.current.removeChild(scriptElement);
+          container.current.removeChild(scriptElement)
         }
       }
-    };
-  }, [symbol]);
+    }
+  }, [symbol])
 
   return (
-    <div style={{height:"500px"}}>
+    <div style={{ height: '500px' }}>
       <div className="tradingview-widget-container" ref={container}>
         <div className="tradingview-widget-container__widget"></div>
         <div className="tradingview-widget-copyright">
-          <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+          <a
+            href="https://www.tradingview.com/"
+            rel="noopener nofollow"
+            target="_blank"
+          >
             <span className="">Track all markets on TradingView</span>
           </a>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default memo(StockPrice);
+export default memo(StockPrice)

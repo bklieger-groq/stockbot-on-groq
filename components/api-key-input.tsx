@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { EyeOpenIcon, EyeNoneIcon } from '@radix-ui/react-icons';
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { EyeOpenIcon, EyeNoneIcon } from '@radix-ui/react-icons'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 
 export function ApiKeyInput() {
-  const [apiKey, setApiKey] = useLocalStorage('groqKey', '');
-  const [isVisible, setIsVisible] = useState(false);
+  const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
+  const [isVisible, setIsVisible] = useState(false)
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const toggleVisibility = () => setIsVisible(!isVisible)
 
   return (
     <div className="mx-auto w-full">
@@ -17,8 +17,8 @@ export function ApiKeyInput() {
         <div className="flex justify-between items-center">
           <Label htmlFor="apiKey">Enter your Groq API Key:</Label>
           <Label htmlFor="apiKey">
-            <a 
-              href="https://console.groq.com/keys" 
+            <a
+              href="https://console.groq.com/keys"
               className="text-[#F55036] text-xs hover:underline"
             >
               Get a Groq API Key
@@ -31,11 +31,16 @@ export function ApiKeyInput() {
             type={isVisible ? 'text' : 'password'}
             placeholder="gsk_yA..."
             value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
+            onChange={e => setApiKey(e.target.value)}
             className="flex-grow"
-            style={{borderRadius:0}}
+            style={{ borderRadius: 0 }}
           />
-          <Button variant="outline" size="icon" onClick={toggleVisibility} style={{borderRadius:0,marginLeft:"-1px"}}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleVisibility}
+            style={{ borderRadius: 0, marginLeft: '-1px' }}
+          >
             {isVisible ? (
               <EyeNoneIcon className="h-4 w-4" />
             ) : (
@@ -45,5 +50,5 @@ export function ApiKeyInput() {
         </div>
       </div>
     </div>
-  );
+  )
 }

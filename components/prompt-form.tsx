@@ -20,7 +20,6 @@ import { useRouter } from 'next/navigation'
 
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 
-
 export function PromptForm({
   input,
   setInput
@@ -33,7 +32,7 @@ export function PromptForm({
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
-  const [apiKey, setApiKey] = useLocalStorage('groqKey', '');
+  const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
 
   React.useEffect(() => {
     if (inputRef.current) {
@@ -66,7 +65,7 @@ export function PromptForm({
         ])
 
         // Submit and get response message
-        const responseMessage = await submitUserMessage(value,apiKey)
+        const responseMessage = await submitUserMessage(value, apiKey)
         setMessages(currentMessages => [...currentMessages, responseMessage])
       }}
     >
@@ -105,8 +104,10 @@ export function PromptForm({
         <div className="absolute right-0 top-[13px] sm:right-4">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button type="submit" size="icon" disabled={input === ''} >
-                <div className="rotate-180"><IconArrowDown /></div>
+              <Button type="submit" size="icon" disabled={input === ''}>
+                <div className="rotate-180">
+                  <IconArrowDown />
+                </div>
                 <span className="sr-only">Send message</span>
               </Button>
             </TooltipTrigger>

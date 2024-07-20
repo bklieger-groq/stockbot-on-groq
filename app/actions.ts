@@ -6,7 +6,6 @@ import { kv } from '@vercel/kv'
 
 import { type Chat } from '@/lib/types'
 
-
 export async function refreshHistory(path: string) {
   redirect(path)
 }
