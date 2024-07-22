@@ -1,4 +1,3 @@
-
 interface ChatLayoutProps {
   children: React.ReactNode
 }

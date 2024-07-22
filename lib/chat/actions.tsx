@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { generateText } from 'ai';
+import { generateText } from 'ai'
 import {
   createAI,
   getMutableAIState,
@@ -9,15 +9,10 @@ import {
 } from 'ai/rsc'
 import { createOpenAI } from '@ai-sdk/openai'
 
-import {
-  BotCard,
-  BotMessage,
-} from '@/components/stocks'
+import { BotCard, BotMessage } from '@/components/stocks'
 
 import { z } from 'zod'
-import {
-  nanoid
-} from '@/lib/utils'
+import { nanoid } from '@/lib/utils'
 import { SpinnerMessage } from '@/components/stocks/message'
 import { Message } from '@/lib/types'
 import { StockChart } from '@/components/tradingview/stock-chart'
@@ -40,31 +35,34 @@ export type UIState = {
 }[]
 
 interface MutableAIState {
-  update: (newState:any) => void;
-  done: (newState: any) => void;
-  get: () => AIState;
+  update: (newState: any) => void
+  done: (newState: any) => void
+  get: () => AIState
 }
 
-const MODEL = 'llama3-70b-8192';
-const TOOL_MODEL = 'llama3-70b-8192';
+const MODEL = 'llama3-70b-8192'
+const TOOL_MODEL = 'llama3-70b-8192'
 
-    // llama3-groq-70b-8192-tool-use-preview
+// llama3-groq-70b-8192-tool-use-preview
 
-
-async function generateCaption(symbol: string, toolName: string, aiState: MutableAIState, groqApiKey: string): Promise<string> {
+async function generateCaption(
+  symbol: string,
+  toolName: string,
+  aiState: MutableAIState,
+  groqApiKey: string
+): Promise<string> {
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
-    apiKey: groqApiKey,
-  });
+    apiKey: groqApiKey
+  })
 
   aiState.update({
     ...aiState.get(),
-    messages: [
-      ...aiState.get().messages
-    ]
+    messages: [...aiState.get().messages]
   })
 
-  const captionSystemMessage = `\
+  const captionSystemMessage =
+    `\
 You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
 
 These are the tools you have available:
@@ -89,7 +87,11 @@ This tool shows an overview of today's stock, futures, bond, and forex market pe
 7. showMarketHeatmap
 This tool shows a heatmap of today's stock market performance across sectors.
 
-You have just called a tool (`+toolName+` for `+symbol+`) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
+You have just called a tool (` +
+    toolName +
+    ` for ` +
+    symbol +
+    `) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
   
 Example:
 
@@ -128,10 +130,10 @@ Besides the symbol, you cannot customize any of the screeners or graphics. Do no
           name: message.name
         }))
       ]
-  });
-  return response.text || '';
-  } catch(err){
-    return ''; // Send tool use without caption.
+    })
+    return response.text || ''
+  } catch (err) {
+    return '' // Send tool use without caption.
   }
 }
 
@@ -156,90 +158,89 @@ async function submitUserMessage(content: string, groqApiKey: string) {
   let textNode: undefined | React.ReactNode
 
   try {
+    const groq = createOpenAI({
+      baseURL: 'https://api.groq.com/openai/v1',
+      apiKey: groqApiKey
+    })
 
-  const groq = createOpenAI({
-    baseURL: 'https://api.groq.com/openai/v1',
-    apiKey: groqApiKey,
-  });
-  
-  // ### Example function calling:
-  // 1. showStockFinancials
-  // This tool shows the financials for a given stock.
-  // Parameters:
-  // symbol: The name or symbol of the stock or currency (string).
-  // Prompt Example:
-  //   {
-  //   "toolName": "showStockChart",
-  //   "args": {
-  //     "symbol": "AAPL",
-  //   }
-  //   }
-  // 2. showStockChart
-  // This tool shows a stock chart for a given stock or currency.
-  // Parameters:
-  // symbol: The name or symbol of the stock or currency (string).
-  // Prompt Example:
-  //   {
-  //   "toolName": "showStockChart",
-  //   "args": {
-  //     "symbol": "AAPL",
-  //   }
-  //   }
-  // 3. showStockPrice
-  // This tool shows the price of a stock or currency.
-  // Parameters:
-  // symbol: The name or symbol of the stock or currency (string).
-  // Prompt Example:
-  //   {
-  //   "toolName": "showStockPrice",
-  //   "args": {
-  //     "symbol": "TSLA",
-  //   }
-  // }
-  // 4. showStockNews
-  // This tool shows the latest news and events for a stock or cryptocurrency.
-  // Parameters:
-  // symbol: The name or symbol of the stock or currency (string).
-  // Prompt Example:
-  //   {
-  //   "toolName": "showStockNews",
-  //   "args": {
-  //     "symbol": "TSLA",
-  //   }
-  // }
-  // 5. showStockScreener
-  // This tool shows a stock screener which the user can use to filter stocks based upon financials and technicals.
-  // Parameters:
-  // *none*
-  // Prompt Example:
-  //   {
-  //   "toolName": "showStockScreener",
-  //   "args": {}
-  // }
-  // 6. showMarketOverview
-  // This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
-  // Parameters:
-  // *none*
-  // Prompt Example:
-  //   {
-  //   "toolName": "showMarketOverview",
-  //   "args": {}
-  // }
-  // 7. showMarketHeatmap
-  // This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.
-  // Parameters:
-  // *none*
-  // Prompt Example:
-  //   {
-  //   "toolName": "showMarketHeatmap",
-  //   "args": {}
-  // }
+    // ### Example function calling:
+    // 1. showStockFinancials
+    // This tool shows the financials for a given stock.
+    // Parameters:
+    // symbol: The name or symbol of the stock or currency (string).
+    // Prompt Example:
+    //   {
+    //   "toolName": "showStockChart",
+    //   "args": {
+    //     "symbol": "AAPL",
+    //   }
+    //   }
+    // 2. showStockChart
+    // This tool shows a stock chart for a given stock or currency.
+    // Parameters:
+    // symbol: The name or symbol of the stock or currency (string).
+    // Prompt Example:
+    //   {
+    //   "toolName": "showStockChart",
+    //   "args": {
+    //     "symbol": "AAPL",
+    //   }
+    //   }
+    // 3. showStockPrice
+    // This tool shows the price of a stock or currency.
+    // Parameters:
+    // symbol: The name or symbol of the stock or currency (string).
+    // Prompt Example:
+    //   {
+    //   "toolName": "showStockPrice",
+    //   "args": {
+    //     "symbol": "TSLA",
+    //   }
+    // }
+    // 4. showStockNews
+    // This tool shows the latest news and events for a stock or cryptocurrency.
+    // Parameters:
+    // symbol: The name or symbol of the stock or currency (string).
+    // Prompt Example:
+    //   {
+    //   "toolName": "showStockNews",
+    //   "args": {
+    //     "symbol": "TSLA",
+    //   }
+    // }
+    // 5. showStockScreener
+    // This tool shows a stock screener which the user can use to filter stocks based upon financials and technicals.
+    // Parameters:
+    // *none*
+    // Prompt Example:
+    //   {
+    //   "toolName": "showStockScreener",
+    //   "args": {}
+    // }
+    // 6. showMarketOverview
+    // This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
+    // Parameters:
+    // *none*
+    // Prompt Example:
+    //   {
+    //   "toolName": "showMarketOverview",
+    //   "args": {}
+    // }
+    // 7. showMarketHeatmap
+    // This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.
+    // Parameters:
+    // *none*
+    // Prompt Example:
+    //   {
+    //   "toolName": "showMarketHeatmap",
+    //   "args": {}
+    // }
 
-  const result = await streamUI({
-    model: groq(TOOL_MODEL),
-    initial: <SpinnerMessage />,
-    maxRetries: 1,
-    system: `\
+    const result = await streamUI({
+      model: groq(TOOL_MODEL),
+      initial: <SpinnerMessage />,
+      maxRetries: 1,
+      system: `\
 You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
 
 ### Cryptocurrency Tickers
@@ -253,474 +254,506 @@ Example:
 User: What is the price of AAPL?
 Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
     `,
-    messages: [
-      ...aiState.get().messages.map((message: any) => ({
-        role: message.role,
-        content: message.content,
-        name: message.name
-      }))
-    ],
-    text: ({ content, done, delta }) => {    
-      if (!textStream) {        
-        textStream = createStreamableValue('')
-        textNode = <BotMessage content={textStream.value} />
+      messages: [
+        ...aiState.get().messages.map((message: any) => ({
+          role: message.role,
+          content: message.content,
+          name: message.name
+        }))
+      ],
+      text: ({ content, done, delta }) => {
+        if (!textStream) {
+          textStream = createStreamableValue('')
+          textNode = <BotMessage content={textStream.value} />
+        }
+
+        if (done) {
+          textStream.done()
+          aiState.done({
+            ...aiState.get(),
+            messages: [
+              ...aiState.get().messages,
+              {
+                id: nanoid(),
+                role: 'assistant',
+                content
+              }
+            ]
+          })
+        } else {
+          textStream.update(delta)
+        }
+
+        return textNode
+      },
+      tools: {
+        showStockChart: {
+          description:
+            'Show a stock chart of a given stock. Use this to show the chart to the user.',
+          parameters: z.object({
+            symbol: z
+              .string()
+              .describe(
+                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              )
+          }),
+          generate: async function* ({ symbol }) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showStockChart',
+                      toolCallId,
+                      args: { symbol }
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showStockChart',
+                      toolCallId,
+                      result: { symbol }
+                    }
+                  ]
+                }
+              ]
+            })
+
+            const caption = await generateCaption(
+              symbol,
+              'showStockChart',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <StockChart props={symbol} />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showStockPrice: {
+          description:
+            'Show the price of a given stock. Use this to show the price and price history to the user.',
+          parameters: z.object({
+            symbol: z
+              .string()
+              .describe(
+                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              )
+          }),
+          generate: async function* ({ symbol }) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showStockPrice',
+                      toolCallId,
+                      args: { symbol }
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showStockPrice',
+                      toolCallId,
+                      result: { symbol }
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              symbol,
+              'showStockPrice',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <StockPrice props={symbol} />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showStockFinancials: {
+          description:
+            'Show the financials of a given stock. Use this to show the financials to the user.',
+          parameters: z.object({
+            symbol: z
+              .string()
+              .describe(
+                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              )
+          }),
+          generate: async function* ({ symbol }) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showStockFinancials',
+                      toolCallId,
+                      args: { symbol }
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showStockFinancials',
+                      toolCallId,
+                      result: { symbol }
+                    }
+                  ]
+                }
+              ]
+            })
+
+            const caption = await generateCaption(
+              symbol,
+              'StockFinancials',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <StockFinancials props={symbol} />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showStockNews: {
+          description:
+            'This tool shows the latest news and events for a stock or cryptocurrency.',
+          parameters: z.object({
+            symbol: z
+              .string()
+              .describe(
+                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              )
+          }),
+          generate: async function* ({ symbol }) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showStockNews',
+                      toolCallId,
+                      args: { symbol }
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showStockNews',
+                      toolCallId,
+                      result: { symbol }
+                    }
+                  ]
+                }
+              ]
+            })
+
+            const caption = await generateCaption(
+              symbol,
+              'showStockNews',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <StockNews props={symbol} />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showStockScreener: {
+          description:
+            'This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.',
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showStockScreener',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showStockScreener',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showStockScreener',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <StockScreener />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showMarketOverview: {
+          description: `This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.`,
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showMarketOverview',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showMarketOverview',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showMarketOverview',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <MarketOverview />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showMarketHeatmap: {
+          description: `This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.`,
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showMarketHeatmap',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showMarketHeatmap',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showMarketHeatmap',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <MarketHeatmap />
+                {caption}
+              </BotCard>
+            )
+          }
+        }
       }
+    })
 
-      if (done) {
-        textStream.done()
-        aiState.done({
-          ...aiState.get(),
-          messages: [
-            ...aiState.get().messages,
-            {
-              id: nanoid(),
-              role: 'assistant',
-              content
-            }
-          ]
-        })
-      } else {
-        textStream.update(delta)
-      }
-
-      return textNode
-    },
-    tools: {
-      showStockChart: {
-        description:
-          'Show a stock chart of a given stock. Use this to show the chart to the user.',
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-            )
-        }),
-        generate: async function* ({ symbol }) {
-          yield (
-            <BotCard>
-              <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showStockChart',
-                    toolCallId,
-                    args: { symbol }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showStockChart',
-                    toolCallId,
-                    result: { symbol }
-                  }
-                ]
-              }
-            ]
-          })
-
-          const caption = await generateCaption(symbol,"showStockChart",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <StockChart props={symbol} />
-              {caption}
-            </BotCard>
-          )
-        }
-      },
-      showStockPrice: {
-        description:
-          'Show the price of a given stock. Use this to show the price and price history to the user.',
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-            )
-        }),
-        generate: async function* ({ symbol }) {
-          yield (
-            <BotCard>
-              <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showStockPrice',
-                    toolCallId,
-                    args: { symbol }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showStockPrice',
-                    toolCallId,
-                    result: { symbol }
-                  }
-                ]
-              }
-            ]
-          })
-          const caption = await generateCaption(symbol,"showStockPrice",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <StockPrice props={symbol} />
-              {caption}
-            </BotCard>
-          )
-        }
-      },
-      showStockFinancials: {
-        description:
-          'Show the financials of a given stock. Use this to show the financials to the user.',
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-            )
-        }),
-        generate: async function* ({ symbol }) {
-          yield (
-            <BotCard>
-             <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showStockFinancials',
-                    toolCallId,
-                    args: { symbol }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showStockFinancials',
-                    toolCallId,
-                    result: { symbol }
-                  }
-                ]
-              }
-            ]
-          })
-
-          const caption = await generateCaption(symbol,"StockFinancials",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <StockFinancials props={symbol} />
-              {caption}
-            </BotCard>
-          )
-
-        }
-      },
-      showStockNews: {
-        description:
-          'This tool shows the latest news and events for a stock or cryptocurrency.',
-        parameters: z.object({
-          symbol: z
-            .string()
-            .describe(
-              'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-            )
-        }),
-        generate: async function* ({ symbol }) {
-          yield (
-            <BotCard>
-              <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showStockNews',
-                    toolCallId,
-                    args: { symbol }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showStockNews',
-                    toolCallId,
-                    result: { symbol }
-                  }
-                ]
-              }
-            ]
-          })
-
-          const caption = await generateCaption(symbol,"showStockNews",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <StockNews props={symbol} />
-              {caption}
-            </BotCard>
-          )
-
-        }
-      },
-      showStockScreener: {
-        description:
-          'This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.',
-        parameters: z.object({
-        }),
-        generate: async function* ({ }) {
-          yield (
-            <BotCard>
-              <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showStockScreener',
-                    toolCallId,
-                    args: { }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showStockScreener',
-                    toolCallId,
-                    result: { }
-                  }
-                ]
-              }
-            ]
-          })
-          const caption = await generateCaption("Generic","showStockScreener",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <StockScreener />
-              {caption}
-            </BotCard>
-          )
-        }
-      },
-      showMarketOverview: {
-        description:
-          `This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.`,
-        parameters: z.object({
-        }),
-        generate: async function* ({ }) {
-          yield (
-            <BotCard>
-              <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showMarketOverview',
-                    toolCallId,
-                    args: { }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showMarketOverview',
-                    toolCallId,
-                    result: { }
-                  }
-                ]
-              }
-            ]
-          })
-          const caption = await generateCaption("Generic","showMarketOverview",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <MarketOverview />
-              {caption}
-            </BotCard>
-          )
-        }
-      },
-      showMarketHeatmap: {
-        description:
-          `This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.`,
-        parameters: z.object({
-        }),
-        generate: async function* ({ }) {
-          yield (
-            <BotCard>
-              <></>
-            </BotCard>
-          )
-
-          const toolCallId = nanoid()
-
-          aiState.done({
-            ...aiState.get(),
-            messages: [
-              ...aiState.get().messages,
-              {
-                id: nanoid(),
-                role: 'assistant',
-                content: [
-                  {
-                    type: 'tool-call',
-                    toolName: 'showMarketHeatmap',
-                    toolCallId,
-                    args: { }
-                  }
-                ]
-              },
-              {
-                id: nanoid(),
-                role: 'tool',
-                content: [
-                  {
-                    type: 'tool-result',
-                    toolName: 'showMarketHeatmap',
-                    toolCallId,
-                    result: { }
-                  }
-                ]
-              }
-            ]
-          })
-          const caption = await generateCaption("Generic","showMarketHeatmap",aiState,groqApiKey=groqApiKey);
-
-          return (
-            <BotCard>
-              <MarketHeatmap />
-              {caption}
-            </BotCard>
-          )
-        }
-      },
+    return {
+      id: nanoid(),
+      display: result.value
     }
-  })
-
-  return {
-    id: nanoid(),
-    display: result.value
+  } catch (err: any) {
+    console.log('Error: ', err.message)
+    return {
+      id: nanoid(),
+      display: (
+        <div className="border p-4">
+          <div className="text-red-700 font-medium">Error: {err.message}</div>
+          <a
+            href="https://github.com/bklieger-groq/stockbot-on-groq/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-sm text-red-800 hover:text-red-900"
+          >
+            If you think something has gone wrong, create an
+            <span className="ml-1" style={{ textDecoration: 'underline' }}>
+              {' '}
+              issue on Github.
+            </span>
+          </a>
+        </div>
+      )
+    }
   }
-} catch (err: any) {
-  console.log("Error: ",err.message);
-  return (
-    {id: nanoid(),display:(
-      <div className="border p-4">
-<div className="text-red-700 font-medium">
-  Error: {err.message}
-</div>
-<a 
-      href="https://github.com/bklieger-groq/stockbot-on-groq/issues"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center text-sm text-red-800 hover:text-red-900"
-    >
-      If you think something has gone wrong, create an<span className="ml-1" style={{textDecoration:"underline"}}>{' '}issue on Github.</span>
-    </a>
-    </div>
-)})
-  };
 }
 
 export const AI = createAI<AIState, UIState>({
   actions: {
-    submitUserMessage,
+    submitUserMessage
   },
   initialUIState: [],
-  initialAIState: { chatId: nanoid(), messages: [] },
+  initialAIState: { chatId: nanoid(), messages: [] }
 })

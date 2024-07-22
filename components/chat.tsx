@@ -43,8 +43,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     if (messagesLength === 2) {
       router.refresh()
     }
-    console.log("Value: ",aiState.messages);
-
+    console.log('Value: ', aiState.messages)
   }, [aiState.messages, router])
 
   useEffect(() => {
@@ -65,15 +64,11 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
       className="group w-full overflow-auto pl-0 peer-[[data-state=open]]:lg:pl-[250px] peer-[[data-state=open]]:xl:pl-[300px]"
       ref={scrollRef}
     >
-      
-      {messages.length ? <MissingApiKeyBanner/>:(
-      <TickerTape/>)}
+      {messages.length ? <MissingApiKeyBanner /> : <TickerTape />}
 
       <div
         className={cn(
-          messages.length 
-            ? 'pb-[200px] pt-4 md:pt-6' 
-            : 'pb-[200px] pt-0',
+          messages.length ? 'pb-[200px] pt-4 md:pt-6' : 'pb-[200px] pt-0',
           className
         )}
         ref={messagesRef}
