@@ -22,6 +22,7 @@ import { StockFinancials } from '@/components/tradingview/stock-financials'
 import { StockScreener } from '@/components/tradingview/stock-screener'
 import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
+import { MarketTrending } from '@/components/tradingview/market-trending'
 import { toast } from 'sonner'
 
 export type AIState = {
@@ -84,6 +85,9 @@ This tool shows an overview of today's stock, futures, bond, and forex market pe
 
 7. showMarketHeatmap
 This tool shows a heatmap of today's stock market performance across sectors.
+
+8. showTrendingStocks
+This tool shows the top five gaining, losing, and most active stocks for the day
 
 You have just called a tool (` +
     toolName +
@@ -641,7 +645,65 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               </BotCard>
             )
           }
+        },
+        showTrendingStocks: {
+          description: `This tool shows the top five gaining, losing, and most active stocks for the day. It is preferred over showMarketOverview if asked specifically about trending or most actives stocks.`,
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showTrendingStocks',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showTrendingStocks',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showTrendingStocks',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <MarketTrending />
+                {caption}
+              </BotCard>
+            )
+          }
         }
+
       }
     })
 
