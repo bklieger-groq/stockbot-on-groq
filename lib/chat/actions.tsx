@@ -23,6 +23,7 @@ import { StockScreener } from '@/components/tradingview/stock-screener'
 import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
 import { MarketTrending } from '@/components/tradingview/market-trending'
+import { ETFHeatmap } from '@/components/tradingview/etf-heatmap'
 import { toast } from 'sonner'
 
 export type AIState = {
@@ -88,6 +89,10 @@ This tool shows a heatmap of today's stock market performance across sectors.
 
 8. showTrendingStocks
 This tool shows the top five gaining, losing, and most active stocks for the day
+
+9. showETFHeatmap
+TThis tool shows a heatmap of today's ETF market performance across sectors and asset classes.
+
 
 You have just called a tool (` +
     toolName +
@@ -641,6 +646,63 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             return (
               <BotCard>
                 <MarketHeatmap />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showETFHeatmap: {
+          description: `This tool shows a heatmap of today's ETF performance across sectors and asset classes. It is preferred over showMarketOverview if asked specifically about the ETF market.`,
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showETFHeatmap',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showETFHeatmap',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showETFHeatmap',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <ETFHeatmap />
                 {caption}
               </BotCard>
             )
