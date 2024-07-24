@@ -88,7 +88,7 @@ This tool shows an overview of today's stock, futures, bond, and forex market pe
 This tool shows a heatmap of today's stock market performance across sectors.
 
 8. showTrendingStocks
-This tool shows the top five gaining, losing, and most active stocks for the day
+This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance.
 
 9. showETFHeatmap
 TThis tool shows a heatmap of today's ETF market performance across sectors and asset classes.
