@@ -709,7 +709,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
           }
         },
         showTrendingStocks: {
-          description: `This tool shows the top five gaining, losing, and most active stocks for the day. It is preferred over showMarketOverview if asked specifically about trending or most actives stocks.`,
+          description: `This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance`,
           parameters: z.object({}),
           generate: async function* ({}) {
             yield (
