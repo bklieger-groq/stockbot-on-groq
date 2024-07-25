@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, memo } from 'react'
 
-export function MarketOverview({ }) {
+export function MarketOverview({}) {
   const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -10,146 +10,135 @@ export function MarketOverview({ }) {
 
     const script = document.createElement('script')
     script.src =
-      'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js'
+      'https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js'
     script.type = 'text/javascript'
     script.async = true
     script.innerHTML = JSON.stringify({
-      "colorTheme": "light",
-      "dateRange": "1M",
-      "showChart": true,
-      "locale": "en",
-      "largeChartUrl": "",
-      "isTransparent": false,
-      "showSymbolLogo": true,
-      "showFloatingTooltip": true,
-      "width": "100%",
-      "height": "100%",
-      "plotLineColorGrowing": "rgba(106, 168, 79, 1)",
-      "plotLineColorFalling": "rgba(255, 0, 0, 1)",
-      "gridLineColor": "rgba(0, 0, 0, 0)",
-      "scaleFontColor": "rgba(19, 23, 34, 1)",
-      "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-      "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-      "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-      "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-      "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
-      "tabs": [
+      width: '100%',
+      height: '100%',
+      symbolsGroups: [
         {
-          "title": "Indices",
-          "symbols": [
+          name: 'Indices',
+          originalName: 'Indices',
+          symbols: [
             {
-              "s": "FOREXCOM:SPXUSD",
-              "d": "S&P 500 Index"
+              name: 'FOREXCOM:SPXUSD',
+              displayName: 'S&P 500 Index'
             },
             {
-              "s": "FOREXCOM:NSXUSD",
-              "d": "US 100 Cash CFD"
+              name: 'FOREXCOM:NSXUSD',
+              displayName: 'US 100 Cash CFD'
             },
             {
-              "s": "FOREXCOM:DJI",
-              "d": "Dow Jones Industrial Average Index"
+              name: 'FOREXCOM:DJI',
+              displayName: 'Dow Jones Index'
             },
             {
-              "s": "INDEX:NKY",
-              "d": "Nikkei 225"
+              name: 'INDEX:NKY',
+              displayName: 'Nikkei 225'
             },
             {
-              "s": "INDEX:DEU40",
-              "d": "DAX Index"
+              name: 'INDEX:DEU40',
+              displayName: 'DAX Index'
             },
             {
-              "s": "FOREXCOM:UKXGBP",
-              "d": "FTSE 100 Index"
+              name: 'FOREXCOM:UKXGBP',
+              displayName: 'FTSE 100 Index'
             }
-          ],
-          "originalTitle": "Indices"
+          ]
         },
         {
-          "title": "Futures",
-          "symbols": [
+          name: 'Futures',
+          originalName: 'Futures',
+          symbols: [
             {
-              "s": "CME_MINI:ES1!",
-              "d": "S&P 500"
+              name: 'CME_MINI:ES1!',
+              displayName: 'S&P 500'
             },
             {
-              "s": "CME:6E1!",
-              "d": "Euro"
+              name: 'CME:6E1!',
+              displayName: 'Euro'
             },
             {
-              "s": "COMEX:GC1!",
-              "d": "Gold"
+              name: 'COMEX:GC1!',
+              displayName: 'Gold'
             },
             {
-              "s": "NYMEX:CL1!",
-              "d": "WTI Crude Oil"
+              name: 'NYMEX:CL1!',
+              displayName: 'WTI Crude Oil'
             },
             {
-              "s": "NYMEX:NG1!",
-              "d": "Gas"
+              name: 'NYMEX:NG1!',
+              displayName: 'Gas'
             },
             {
-              "s": "CBOT:ZC1!",
-              "d": "Corn"
+              name: 'CBOT:ZC1!',
+              displayName: 'Corn'
             }
-          ],
-          "originalTitle": "Futures"
+          ]
         },
         {
-          "title": "Bonds",
-          "symbols": [
+          name: 'Bonds',
+          originalName: 'Bonds',
+          symbols: [
             {
-              "s": "CBOT:ZB1!",
-              "d": "T-Bond"
+              name: 'CBOT:ZB1!',
+              displayName: 'T-Bond'
             },
             {
-              "s": "CBOT:UB1!",
-              "d": "Ultra T-Bond"
+              name: 'CBOT:UB1!',
+              displayName: 'Ultra T-Bond'
             },
             {
-              "s": "EUREX:FGBL1!",
-              "d": "Euro Bund"
+              name: 'EUREX:FGBL1!',
+              displayName: 'Euro Bund'
             },
             {
-              "s": "EUREX:FBTP1!",
-              "d": "Euro BTP"
+              name: 'EUREX:FBTP1!',
+              displayName: 'Euro BTP'
             },
             {
-              "s": "EUREX:FGBM1!",
-              "d": "Euro BOBL"
+              name: 'EUREX:FGBM1!',
+              displayName: 'Euro BOBL'
             }
-          ],
-          "originalTitle": "Bonds"
+          ]
         },
         {
-          "title": "Forex",
-          "symbols": [
+          name: 'Forex',
+          originalName: 'Forex',
+          symbols: [
             {
-              "s": "FX:EURUSD",
-              "d": "EUR to USD"
+              name: 'FX:EURUSD',
+              displayName: 'EUR to USD'
             },
             {
-              "s": "FX:GBPUSD",
-              "d": "GBP to USD"
+              name: 'FX:GBPUSD',
+              displayName: 'GBP to USD'
             },
             {
-              "s": "FX:USDJPY",
-              "d": "USD to JPY"
+              name: 'FX:USDJPY',
+              displayName: 'USD to JPY'
             },
             {
-              "s": "FX:USDCHF",
-              "d": "USD to CHF"
+              name: 'FX:USDCHF',
+              displayName: 'USD to CHF'
             },
             {
-              "s": "FX:AUDUSD",
-              "d": "AUD to USD"
+              name: 'FX:AUDUSD',
+              displayName: 'AUD to USD'
             },
             {
-              "s": "FX:USDCAD",
-              "d": "USD to CAD"
+              name: 'FX:USDCAD',
+              displayName: 'USD to CAD'
             }
-          ],
-          "originalTitle": "Forex"
-        }]
+          ]
+        }
+      ],
+      showSymbolLogo: true,
+      isTransparent: true,
+      colorTheme: 'light',
+      locale: 'en'
+      // backgroundColor: "#ffffff"
     })
 
     container.current.appendChild(script)
@@ -162,7 +151,7 @@ export function MarketOverview({ }) {
   }, [])
 
   return (
-    <div style={{ height: '600px', width: '600px' }}>
+    <div style={{ height: '300px' }}>
       <div
         className="tradingview-widget-container"
         ref={container}
