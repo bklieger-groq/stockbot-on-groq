@@ -35,6 +35,11 @@ export function ChatPanel({
 
   const exampleMessages = [
     {
+      heading: 'Show me top gainers, top losers',
+      subheading: 'and most active stocks',
+      message: 'Show me top gainers, top losers and most active stocks'
+    },
+    {
       heading: 'What is the price',
       subheading: 'of Apple Inc.?',
       message: 'What is the price of Apple stock?'
