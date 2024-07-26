@@ -9,7 +9,7 @@ import {
 } from 'ai/rsc'
 import { createOpenAI } from '@ai-sdk/openai'
 
-import { BotCard, BotMessage } from '@/components/stocks'
+import { BotCard, BotMessage } from '@/components/stocks/message'
 
 import { z } from 'zod'
 import { nanoid } from '@/lib/utils'
@@ -22,6 +22,8 @@ import { StockFinancials } from '@/components/tradingview/stock-financials'
 import { StockScreener } from '@/components/tradingview/stock-screener'
 import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
+import { MarketTrending } from '@/components/tradingview/market-trending'
+import { ETFHeatmap } from '@/components/tradingview/etf-heatmap'
 import { toast } from 'sonner'
 
 export type AIState = {
@@ -42,8 +44,6 @@ interface MutableAIState {
 
 const MODEL = 'llama3-70b-8192'
 const TOOL_MODEL = 'llama3-70b-8192'
-
-// llama3-groq-70b-8192-tool-use-preview
 
 async function generateCaption(
   symbol: string,
@@ -87,6 +87,13 @@ This tool shows an overview of today's stock, futures, bond, and forex market pe
 7. showMarketHeatmap
 This tool shows a heatmap of today's stock market performance across sectors.
 
+8. showTrendingStocks
+This tool shows the top five gaining, losing, and most active stocks for the day
+
+9. showETFHeatmap
+TThis tool shows a heatmap of today's ETF market performance across sectors and asset classes.
+
+
 You have just called a tool (` +
     toolName +
     ` for ` +
@@ -114,7 +121,6 @@ Your response should be BRIEF, about 2-3 sentences.
 
 Besides the symbol, you cannot customize any of the screeners or graphics. Do not tell the user that you can.
     `
-  // Assistant (you): Here is the price of AAPL stock. Would you like to see a chart of AAPL or get more information about its financials?
 
   try {
     const response = await generateText({
@@ -162,79 +168,6 @@ async function submitUserMessage(content: string, groqApiKey: string) {
       baseURL: 'https://api.groq.com/openai/v1',
       apiKey: groqApiKey
     })
-
-    // ### Example function calling:
-    // 1. showStockFinancials
-    // This tool shows the financials for a given stock.
-    // Parameters:
-    // symbol: The name or symbol of the stock or currency (string).
-    // Prompt Example:
-    //   {
-    //   "toolName": "showStockChart",
-    //   "args": {
-    //     "symbol": "AAPL",
-    //   }
-    //   }
-    // 2. showStockChart
-    // This tool shows a stock chart for a given stock or currency.
-    // Parameters:
-    // symbol: The name or symbol of the stock or currency (string).
-    // Prompt Example:
-    //   {
-    //   "toolName": "showStockChart",
-    //   "args": {
-    //     "symbol": "AAPL",
-    //   }
-    //   }
-    // 3. showStockPrice
-    // This tool shows the price of a stock or currency.
-    // Parameters:
-    // symbol: The name or symbol of the stock or currency (string).
-    // Prompt Example:
-    //   {
-    //   "toolName": "showStockPrice",
-    //   "args": {
-    //     "symbol": "TSLA",
-    //   }
-    // }
-    // 4. showStockNews
-    // This tool shows the latest news and events for a stock or cryptocurrency.
-    // Parameters:
-    // symbol: The name or symbol of the stock or currency (string).
-    // Prompt Example:
-    //   {
-    //   "toolName": "showStockNews",
-    //   "args": {
-    //     "symbol": "TSLA",
-    //   }
-    // }
-    // 5. showStockScreener
-    // This tool shows a stock screener which the user can use to filter stocks based upon financials and technicals.
-    // Parameters:
-    // *none*
-    // Prompt Example:
-    //   {
-    //   "toolName": "showStockScreener",
-    //   "args": {}
-    // }
-    // 6. showMarketOverview
-    // This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
-    // Parameters:
-    // *none*
-    // Prompt Example:
-    //   {
-    //   "toolName": "showMarketOverview",
-    //   "args": {}
-    // }
-    // 7. showMarketHeatmap
-    // This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.
-    // Parameters:
-    // *none*
-    // Prompt Example:
-    //   {
-    //   "toolName": "showMarketHeatmap",
-    //   "args": {}
-    // }
 
     const result = await streamUI({
       model: groq(TOOL_MODEL),
@@ -717,7 +650,122 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               </BotCard>
             )
           }
+        },
+        showETFHeatmap: {
+          description: `This tool shows a heatmap of today's ETF performance across sectors and asset classes. It is preferred over showMarketOverview if asked specifically about the ETF market.`,
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showETFHeatmap',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showETFHeatmap',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showETFHeatmap',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <ETFHeatmap />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+        showTrendingStocks: {
+          description: `This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance`,
+          parameters: z.object({}),
+          generate: async function* ({}) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showTrendingStocks',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showTrendingStocks',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              'showTrendingStocks',
+              aiState,
+              (groqApiKey = groqApiKey)
+            )
+
+            return (
+              <BotCard>
+                <MarketTrending />
+                {caption}
+              </BotCard>
+            )
+          }
         }
+
       }
     })
 
