@@ -5,11 +5,15 @@ import Image from 'next/image'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { Button, buttonVariants } from '@/components/ui/button'
 
-export function MissingApiKeyBanner() {
+export function MissingApiKeyBanner({ missingKeys }: { missingKeys: string[] }) {
   const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
 
   if (apiKey.length > 0) {
-    return <></>
+    return null
+  }
+
+  if (!missingKeys.includes("GROQ_API_KEY")){
+    return null
   }
 
   return (
