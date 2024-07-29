@@ -44,16 +44,17 @@ interface MutableAIState {
 
 const MODEL = 'llama3-70b-8192'
 const TOOL_MODEL = 'llama3-70b-8192'
+const GROQ_API_KEY_ENV = process.env.GROQ_API_KEY;
 
 async function generateCaption(
   symbol: string,
   toolName: string,
   aiState: MutableAIState,
-  groqApiKey: string
+  groqApiKeyLocal: string
 ): Promise<string> {
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
-    apiKey: groqApiKey
+    apiKey: GROQ_API_KEY_ENV ?? groqApiKeyLocal
   })
 
   aiState.update({
@@ -143,7 +144,7 @@ Besides the symbol, you cannot customize any of the screeners or graphics. Do no
   }
 }
 
-async function submitUserMessage(content: string, groqApiKey: string) {
+async function submitUserMessage(content: string, groqApiKeyLocal: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
@@ -166,7 +167,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
   try {
     const groq = createOpenAI({
       baseURL: 'https://api.groq.com/openai/v1',
-      apiKey: groqApiKey
+      apiKey: GROQ_API_KEY_ENV ?? groqApiKeyLocal
     })
 
     const result = await streamUI({
@@ -274,7 +275,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               symbol,
               'showStockChart',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -338,7 +339,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               symbol,
               'showStockPrice',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -403,7 +404,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               symbol,
               'StockFinancials',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -468,7 +469,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               symbol,
               'showStockNews',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -526,7 +527,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               'Generic',
               'showStockScreener',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -583,7 +584,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               'Generic',
               'showMarketOverview',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -640,7 +641,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               'Generic',
               'showMarketHeatmap',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -697,7 +698,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               'Generic',
               'showETFHeatmap',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (
@@ -754,7 +755,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               'Generic',
               'showTrendingStocks',
               aiState,
-              (groqApiKey = groqApiKey)
+              (groqApiKeyLocal = groqApiKeyLocal)
             )
 
             return (

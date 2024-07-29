@@ -28,7 +28,6 @@ export function EmptyScreen() {
             </ExternalLink>
           </span>
         </p>
-        <div className="mb-6"></div>
         <ApiKeyInput />
       </div>
     </div>

@@ -1,18 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { EyeOpenIcon, EyeNoneIcon } from '@radix-ui/react-icons'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
+import { getMissingKeys } from '@/app/actions'
 
 export function ApiKeyInput() {
+  const [missingKeys, setMissingKeys] = useState<string[]>([])
+
+  useEffect(() => {
+    async function fetchMissingKeys() {
+      const keys = await getMissingKeys()
+      setMissingKeys(keys)
+    }
+    fetchMissingKeys()
+  }, [])
+
+  if (!missingKeys.includes("GROQ_API_KEY")){
+    return null
+  }
   const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
   const [isVisible, setIsVisible] = useState(false)
 
   const toggleVisibility = () => setIsVisible(!isVisible)
 
   return (
-    <div className="mx-auto w-full">
+    <div className="mx-auto w-full mt-6">
       <div className="space-y-1">
         <div className="flex justify-between items-center">
           <Label htmlFor="apiKey">Enter your Groq API Key:</Label>
