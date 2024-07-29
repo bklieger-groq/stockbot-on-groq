@@ -8,7 +8,9 @@ import { getMissingKeys } from '@/app/actions'
 
 export function ApiKeyInput() {
   const [missingKeys, setMissingKeys] = useState<string[]>([])
-
+  const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
+  const [isVisible, setIsVisible] = useState(false)
+  
   useEffect(() => {
     async function fetchMissingKeys() {
       const keys = await getMissingKeys()
@@ -20,8 +22,6 @@ export function ApiKeyInput() {
   if (!missingKeys.includes("GROQ_API_KEY")){
     return null
   }
-  const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
-  const [isVisible, setIsVisible] = useState(false)
 
   const toggleVisibility = () => setIsVisible(!isVisible)
 
