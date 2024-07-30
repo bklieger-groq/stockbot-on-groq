@@ -4,9 +4,12 @@ import Image from 'next/image'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 
-export function MissingApiKeyBanner({ missingKeys }: { missingKeys: string[] }) {
-
-  if (!missingKeys.includes("GROQ_API_KEY")){
+export function MissingApiKeyBanner({
+  missingKeys
+}: {
+  missingKeys: string[]
+}) {
+  if (!missingKeys.includes('GROQ_API_KEY')) {
     return null
   }
 
