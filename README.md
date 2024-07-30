@@ -52,12 +52,18 @@ StockBot is an AI-powered chatbot that leverages Llama3 70b on Groq, Vercel’s 
 
 > [!IMPORTANT]
 > To use StockBot, you can use a hosted version at [groq-stockbot.vercel.app](https://groq-stockbot.vercel.app/).
-> Alternatively, you can run StockBot locally with Streamlit using the quickstart instructions.
+> Alternatively, you can run StockBot locally using the quickstart instructions.
 
 
 You will need a Groq API Key to run the application. You can obtain one [here on the Groq console](https://console.groq.com/keys).
 
 To get started locally, you can run the following:
+
+```bash
+cp .env.example .env.local
+```
+
+Add your Groq API key to .env.local, then run:
 
 ```bash
 pnpm install

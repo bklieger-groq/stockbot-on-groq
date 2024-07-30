@@ -44,16 +44,16 @@ interface MutableAIState {
 
 const MODEL = 'llama3-70b-8192'
 const TOOL_MODEL = 'llama3-70b-8192'
+const GROQ_API_KEY_ENV = process.env.GROQ_API_KEY;
 
 async function generateCaption(
   symbol: string,
   toolName: string,
-  aiState: MutableAIState,
-  groqApiKey: string
+  aiState: MutableAIState
 ): Promise<string> {
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
-    apiKey: groqApiKey
+    apiKey: GROQ_API_KEY_ENV
   })
 
   aiState.update({
@@ -143,7 +143,7 @@ Besides the symbol, you cannot customize any of the screeners or graphics. Do no
   }
 }
 
-async function submitUserMessage(content: string, groqApiKey: string) {
+async function submitUserMessage(content: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
@@ -166,7 +166,7 @@ async function submitUserMessage(content: string, groqApiKey: string) {
   try {
     const groq = createOpenAI({
       baseURL: 'https://api.groq.com/openai/v1',
-      apiKey: groqApiKey
+      apiKey: GROQ_API_KEY_ENV
     })
 
     const result = await streamUI({
@@ -273,8 +273,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               symbol,
               'showStockChart',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -337,8 +336,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               symbol,
               'showStockPrice',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -402,8 +400,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               symbol,
               'StockFinancials',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -467,8 +464,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               symbol,
               'showStockNews',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -525,8 +521,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               'Generic',
               'showStockScreener',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -582,8 +577,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               'Generic',
               'showMarketOverview',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -639,8 +633,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               'Generic',
               'showMarketHeatmap',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -696,8 +689,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               'Generic',
               'showETFHeatmap',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -753,8 +745,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             const caption = await generateCaption(
               'Generic',
               'showTrendingStocks',
-              aiState,
-              (groqApiKey = groqApiKey)
+              aiState
             )
 
             return (
@@ -774,7 +765,10 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
       display: result.value
     }
   } catch (err: any) {
-    console.log('Error: ', err.message)
+    // If key is missing, show error message that Groq API Key is missing.
+    if (err.message.includes("OpenAI API key is missing.")){
+      err.message = "Groq API key is missing. Pass it using the GROQ_API_KEY environment variable. Try restarting the application if you recently changed your environment variables."
+    }
     return {
       id: nanoid(),
       display: (
