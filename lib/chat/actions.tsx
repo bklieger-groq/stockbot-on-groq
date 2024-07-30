@@ -145,7 +145,7 @@ Besides the symbol, you cannot customize any of the screeners or graphics. Do no
 
 async function submitUserMessage(content: string) {
   'use server'
-
+  
   const aiState = getMutableAIState<typeof AI>()
 
   aiState.update({
