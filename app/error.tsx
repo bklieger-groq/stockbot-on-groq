@@ -22,7 +22,7 @@ export default function Error({ error, reset }: ErrorProps) {
           rel="noopener noreferrer"
           className="inline-flex items-center text-sm text-red-800 hover:text-red-900"
         >
-         Please try again. If you encounter the same error, create an
+          Please try again. If you encounter the same error, create an
           <span className="ml-1" style={{ textDecoration: 'underline' }}>
             {' '}
             issue on Github.

@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/header'
 import { Toaster } from '@/components/ui/sonner'
-import { ErrorBoundary } from '@/components/error-boundary';
 
 export const metadata = {
   metadataBase: process.env.VERCEL_URL

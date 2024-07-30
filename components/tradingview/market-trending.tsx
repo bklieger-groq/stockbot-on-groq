@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, memo } from 'react'
 
-export function MarketTrending({ }) {
+export function MarketTrending({}) {
   const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -14,26 +14,26 @@ export function MarketTrending({ }) {
     script.type = 'text/javascript'
     script.async = true
     script.innerHTML = JSON.stringify({
-      "colorTheme": "light",
-      "dateRange": "1D",
-      "exchange": "US",
-      "showChart": true,
-      "locale": "en",
-      "largeChartUrl": "",
-      "isTransparent": false,
-      "showSymbolLogo": true,
-      "showFloatingTooltip": true,
-      "width": "100%",
-      "height": "100%",
-      "plotLineColorGrowing": "rgba(106, 168, 79, 1)",
-      "plotLineColorFalling": "rgba(255, 0, 0, 1)",
-      "gridLineColor": "rgba(0, 0, 0, 0)",
-      "scaleFontColor": "rgba(19, 23, 34, 1)",
-      "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-      "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-      "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-      "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-      "symbolActiveColor": "rgba(60, 120, 216, 0.12)",
+      colorTheme: 'light',
+      dateRange: '1D',
+      exchange: 'US',
+      showChart: true,
+      locale: 'en',
+      largeChartUrl: '',
+      isTransparent: false,
+      showSymbolLogo: true,
+      showFloatingTooltip: true,
+      width: '100%',
+      height: '100%',
+      plotLineColorGrowing: 'rgba(106, 168, 79, 1)',
+      plotLineColorFalling: 'rgba(255, 0, 0, 1)',
+      gridLineColor: 'rgba(0, 0, 0, 0)',
+      scaleFontColor: 'rgba(19, 23, 34, 1)',
+      belowLineFillColorGrowing: 'rgba(41, 98, 255, 0.12)',
+      belowLineFillColorFalling: 'rgba(41, 98, 255, 0.12)',
+      belowLineFillColorGrowingBottom: 'rgba(41, 98, 255, 0)',
+      belowLineFillColorFallingBottom: 'rgba(41, 98, 255, 0)',
+      symbolActiveColor: 'rgba(60, 120, 216, 0.12)'
     })
 
     container.current.appendChild(script)
