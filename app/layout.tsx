@@ -3,7 +3,7 @@ import { GeistMono } from 'geist/font/mono'
 
 import '@/app/globals.css'
 import { cn } from '@/lib/utils'
-import { ThemeToggle } from '@/components/theme-toggle'
+// import { ThemeToggle } from '@/components/theme-toggle'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/header'
 import { Toaster } from '@/components/ui/sonner'
