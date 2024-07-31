@@ -2,14 +2,15 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { Button, buttonVariants } from '@/components/ui/button'
 
-export function MissingApiKeyBanner() {
-  const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
-
-  if (apiKey.length > 0) {
-    return <></>
+export function MissingApiKeyBanner({
+  missingKeys
+}: {
+  missingKeys: string[]
+}) {
+  if (!missingKeys.includes('GROQ_API_KEY')) {
+    return null
   }
 
   return (
@@ -18,7 +19,7 @@ export function MissingApiKeyBanner() {
         You need to provide a Groq API Key.
       </div>
       <a
-        href="/new"
+        href="https://console.groq.com/keys"
         rel="noopener noreferrer"
         className="inline-flex items-center text-sm text-red-800 hover:text-red-900"
       >
@@ -27,7 +28,7 @@ export function MissingApiKeyBanner() {
           style={{ textDecoration: 'underline' }}
         >
           {' '}
-          Set it on the homepage.
+          Get a Groq API Key
         </span>
       </a>
     </div>

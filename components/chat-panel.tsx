@@ -9,7 +9,6 @@ import { useAIState, useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
 import { UserMessage } from './stocks/message'
-import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 
 export interface ChatPanelProps {
   id?: string
@@ -31,14 +30,8 @@ export function ChatPanel({
   const [aiState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
   const { submitUserMessage } = useActions()
-  const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
 
   const exampleMessages = [
-    {
-      heading: 'Show me top gainers, top losers',
-      subheading: 'and most active stocks',
-      message: 'Show me top gainers, top losers and most active stocks'
-    },
     {
       heading: 'What is the price',
       subheading: 'of Apple Inc.?',
@@ -115,10 +108,8 @@ export function ChatPanel({
                   ])
 
                   const responseMessage = await submitUserMessage(
-                    example.message,
-                    apiKey
+                    example.message
                   )
-                  console.log('Response: ', responseMessage)
                   setMessages(currentMessages => [
                     ...currentMessages,
                     responseMessage
