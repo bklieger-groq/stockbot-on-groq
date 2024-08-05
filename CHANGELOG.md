@@ -4,7 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
- ## [1.1.1] - 2024-06-30
+ ## [1.1.2] - 2024-08-05
+  
+Add annotations to chart widget, add vercel deploy button, clean dependencies 
+
+### Added
+
+### Changed
+
+- README.md
+- components/tradingview/stock-chart.tsx
+- package.json
+- pnpm-lock.yaml
+
+
+ ## [1.1.1] - 2024-07-30
   
 Remove legacy local storage handling of API key in favor of server-side
 
@@ -27,7 +41,7 @@ Remove legacy local storage handling of API key in favor of server-side
 
 ---
 
-## [1.1.0] - 2024-06-29
+## [1.1.0] - 2024-07-29
   
 Updated functionality to load GROQ_API_KEY from .env and hide local storage management of API key if provided.
 
