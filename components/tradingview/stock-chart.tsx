@@ -23,6 +23,7 @@ export function StockChart({ props: symbol }: { props: string }) {
       backgroundColor: 'rgba(255, 255, 255, 1)',
       gridColor: 'rgba(247, 247, 247, 1)',
       withdateranges: true,
+      hide_side_toolbar: false,
       allow_symbol_change: true,
       calendar: false,
       hide_top_toolbar: true,
