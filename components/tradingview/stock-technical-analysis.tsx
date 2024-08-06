@@ -12,18 +12,17 @@ export function StockTA({ props: symbol }: { props: string }) {
       'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js'
     script.type = 'text/javascript'
     script.async = true
-    script.innerHTML = `
-    {
-        "interval": "5m",
-        "width": 100%,
-        "isTransparent": false,
-        "height": 100%,
-        "symbol": ${symbol},
-        "showIntervalTabs": true,
-        "displayMode": "single",
-        "locale": "en",
-        "colorTheme": "light"
-    }`
+    script.innerHTML = JSON.stringify({
+      interval: '5m',
+      width: '100%',
+      isTransparent: false,
+      height: '100%',
+      symbol: symbol,
+      showIntervalTabs: true,
+      displayMode: "single",
+      locale: "en",
+      colorTheme: "light"
+    })
 
     container.current.appendChild(script)
 
