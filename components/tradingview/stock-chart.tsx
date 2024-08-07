@@ -1,9 +1,16 @@
 'use client'
 
-import React, { useEffect, useRef, memo } from 'react'
+import React, { useEffect, useRef, memo, useMemo } from 'react'
+import { chartStyleMapping } from '@/lib/chart-utils'
 
-export function StockChart({ props: symbol }: { props: string }) {
+export function StockChart({ symbol, chartStyle }: { symbol: string, chartStyle: string }) {
   const container = useRef<HTMLDivElement>(null)
+
+  // Find the corresponding style value for the given chartStyle
+  const styleValue = useMemo(() => {
+    const style = chartStyleMapping.find(style => style.name.toLowerCase() === chartStyle.toLowerCase())
+    return style ? style.value : '2'
+  }, [chartStyle])
 
   useEffect(() => {
     if (!container.current) return
@@ -18,7 +25,7 @@ export function StockChart({ props: symbol }: { props: string }) {
       interval: 'D',
       timezone: 'Etc/UTC',
       theme: 'light',
-      style: '1',
+      style: styleValue,
       locale: 'en',
       backgroundColor: 'rgba(255, 255, 255, 1)',
       gridColor: 'rgba(247, 247, 247, 1)',
@@ -37,7 +44,7 @@ export function StockChart({ props: symbol }: { props: string }) {
         container.current.removeChild(script)
       }
     }
-  }, [symbol])
+  }, [symbol, styleValue])
 
   return (
     <div style={{ height: '500px' }}>
