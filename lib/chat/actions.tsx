@@ -46,12 +46,19 @@ const MODEL = 'llama3-70b-8192'
 const TOOL_MODEL = 'llama3-70b-8192'
 const GROQ_API_KEY_ENV = process.env.GROQ_API_KEY
 
+type ComparisonSymbolObject = {
+  symbol: string;
+  position: "SameScale";
+};
+
 async function generateCaption(
   symbol: string,
-  comparisonSymbols: string[] = [],
+  comparisonSymbols: ComparisonSymbolObject[],
   toolName: string,
   aiState: MutableAIState
 ): Promise<string> {
+
+  console.log(comparisonSymbols)
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
     apiKey: GROQ_API_KEY_ENV
@@ -126,7 +133,7 @@ or
 Assistant (you): This is the chart for AAPL and MSFT stocks. I can also share further financial data.
 
 or 
-Assistant (you): Would you like to see the Technical Analysis of AAPL / MSFT stocks or get more information about their financials?
+Assistant (you): Would you like to see the get more information about the financials of AAPL and MSFT stocks?
 
 ## Guidelines
 Talk like one of the above responses, but BE CREATIVE and generate a DIVERSE response. 
@@ -250,15 +257,15 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               ),
             comparisonSymbols: z.array(z.object({
               symbol: z.string(),
-              // position: z.enum(['SameScale', 'NewScale', 'NoScale'])
               position: z.literal("SameScale")
             }))
+              .default([])
               .describe(
                 'Optional list of symbols to compare. e.g. ["MSFT", "GOOGL"]'
               )
           }),
 
-          generate: async function* ({ symbol, comparisonSymbols = [] }) {
+          generate: async function* ({ symbol, comparisonSymbols }) {
             yield (
               <BotCard>
                 <></>

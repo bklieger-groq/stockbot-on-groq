@@ -2,15 +2,16 @@
 
 import React, { useEffect, useRef, memo } from 'react'
 
-export function StockChart({ symbol, comparisonSymbols }: { symbol: string, comparisonSymbols: string[] }) {
+type ComparisonSymbolObject = {
+  symbol: string;
+  position: "SameScale";
+};
+
+export function StockChart({ symbol, comparisonSymbols }: { symbol: string, comparisonSymbols: ComparisonSymbolObject[] }) {
   const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!container.current) return
-
-    console.log("Line 10")
-    console.log(comparisonSymbols)
-
     const script = document.createElement('script')
     script.src =
       'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js'
@@ -27,7 +28,7 @@ export function StockChart({ symbol, comparisonSymbols }: { symbol: string, comp
       backgroundColor: 'rgba(255, 255, 255, 1)',
       gridColor: 'rgba(247, 247, 247, 1)',
       withdateranges: true,
-      hide_side_toolbar: false,
+      hide_side_toolbar: comparisonSymbols.length > 0 ? true : false,
       allow_symbol_change: true,
       compareSymbols: comparisonSymbols,
       calendar: false,
