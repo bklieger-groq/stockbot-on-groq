@@ -123,7 +123,7 @@ Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "
 Assistant (you): Here is the chart of GOOG with hollow candlesticks as requested.  Ican also provide you with the current price of GOOG or give you an overview of its financials if you're interested.
 
 or 
-Assistant (you): Would you like to see a Technical Analysis chart of GOOG or get more information about its financials?
+Assistant (you): Would you like to see a Bar chart of GOOG or get more information about its financials?
 
 ## Guidelines
 Take reference from the above responses, but BE CREATIVE and generate a DIVERSE response. 
@@ -242,7 +242,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             chartStyle: z
               .string()
               .describe(
-                'The style of the chart to be displayed. e.g. line/candlestick/bar.'
+                'The style of the chart to be displayed. e.g. Bars/Candles/Point and Figure/Baseline/Kagi/Renko'
               )
           }),
           generate: async function* ({ symbol ,chartStyle}) {

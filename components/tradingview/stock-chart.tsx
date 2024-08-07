@@ -12,7 +12,6 @@ export function StockChart({ symbol, chartStyle }: { symbol: string, chartStyle:
     return style ? style.value : '2'
   }, [chartStyle])
 
-  console.log("line 29 styleValue = ", styleValue)
   useEffect(() => {
     if (!container.current) return
     const script = document.createElement('script')
