@@ -9,7 +9,7 @@ export function StockChart({ symbol, chartStyle }: { symbol: string, chartStyle:
   // Find the corresponding style value for the given chartStyle
   const styleValue = useMemo(() => {
     const style = chartStyleMapping.find(style => style.name.toLowerCase() === chartStyle.toLowerCase())
-    return style ? style.value : '0'
+    return style ? style.value : '2'
   }, [chartStyle])
 
   console.log("line 29 styleValue = ", styleValue)
