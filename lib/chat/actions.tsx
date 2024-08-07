@@ -48,6 +48,7 @@ const GROQ_API_KEY_ENV = process.env.GROQ_API_KEY
 
 async function generateCaption(
   symbol: string,
+  comparisonSymbols: string[] = [],
   toolName: string,
   aiState: MutableAIState
 ): Promise<string> {
@@ -70,7 +71,7 @@ These are the tools you have available:
 This tool shows the financials for a given stock.
 
 2. showStockChart
-This tool shows a stock chart for a given stock or currency.
+This tool shows a stock chart for a given stock or currency. Optionally compare 2 or more tickers
 
 3. showStockPrice
 This tool shows the price of a stock or currency.
@@ -97,7 +98,7 @@ TThis tool shows a heatmap of today's ETF market performance across sectors and 
 You have just called a tool (` +
     toolName +
     ` for ` +
-    symbol +
+    symbol + ' and ' + comparisonSymbols +
     `) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
   
 Example:
@@ -113,6 +114,19 @@ Assistant (you): This is the price of AAPL stock. I can also generate a chart or
 
 or 
 Assistant (you): Would you like to see a chart of AAPL or get more information about its financials?
+
+Example 2 :
+
+User: Compare AAPL and MSFT stock prices
+Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockChart" }, "parameters": { "symbol": "AAPL" , "comparisonSymbols" : [{"symbol": "MSFT", "position": "SameScale"}] } } } 
+
+Assistant (you): The chart illustrates the recent price movements of Microsoft (MSFT) and Apple (AAPL) stocks.  It's worth noting that these visual differences don't necessarily indicate which stock is 'better' - that depends on various financial metrics and your personal investment strategy
+or
+
+Assistant (you): This is the chart for AAPL and MSFT stocks. I can also share further financial data.
+
+or 
+Assistant (you): Would you like to see the Technical Analysis of AAPL / MSFT stocks or get more information about their financials?
 
 ## Guidelines
 Talk like one of the above responses, but BE CREATIVE and generate a DIVERSE response. 
@@ -186,6 +200,11 @@ Example:
 
 User: What is the price of AAPL?
 Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
+
+Example 2:
+
+User: What is the price of AAPL?
+Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
     `,
       messages: [
         ...aiState.get().messages.map((message: any) => ({
@@ -228,9 +247,18 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               .string()
               .describe(
                 'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              ),
+            comparisonSymbols: z.array(z.object({
+              symbol: z.string(),
+              // position: z.enum(['SameScale', 'NewScale', 'NoScale'])
+              position: z.literal("SameScale")
+            }))
+              .describe(
+                'Optional list of symbols to compare. e.g. ["MSFT", "GOOGL"]'
               )
           }),
-          generate: async function* ({ symbol }) {
+
+          generate: async function* ({ symbol, comparisonSymbols = [] }) {
             yield (
               <BotCard>
                 <></>
@@ -251,7 +279,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
                       type: 'tool-call',
                       toolName: 'showStockChart',
                       toolCallId,
-                      args: { symbol }
+                      args: { symbol, comparisonSymbols }
                     }
                   ]
                 },
@@ -263,7 +291,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
                       type: 'tool-result',
                       toolName: 'showStockChart',
                       toolCallId,
-                      result: { symbol }
+                      result: { symbol, comparisonSymbols }
                     }
                   ]
                 }
@@ -272,13 +300,14 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
 
             const caption = await generateCaption(
               symbol,
+              comparisonSymbols,
               'showStockChart',
               aiState
             )
 
             return (
               <BotCard>
-                <StockChart props={symbol} />
+                <StockChart symbol={symbol} comparisonSymbols={comparisonSymbols} />
                 {caption}
               </BotCard>
             )
@@ -335,6 +364,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             })
             const caption = await generateCaption(
               symbol,
+              [],
               'showStockPrice',
               aiState
             )
@@ -399,6 +429,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
 
             const caption = await generateCaption(
               symbol,
+              [],
               'StockFinancials',
               aiState
             )
@@ -463,6 +494,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
 
             const caption = await generateCaption(
               symbol,
+              [],
               'showStockNews',
               aiState
             )
@@ -479,7 +511,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
           description:
             'This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.',
           parameters: z.object({}),
-          generate: async function* ({}) {
+          generate: async function* ({ }) {
             yield (
               <BotCard>
                 <></>
@@ -520,6 +552,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             })
             const caption = await generateCaption(
               'Generic',
+              [],
               'showStockScreener',
               aiState
             )
@@ -535,7 +568,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
         showMarketOverview: {
           description: `This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.`,
           parameters: z.object({}),
-          generate: async function* ({}) {
+          generate: async function* ({ }) {
             yield (
               <BotCard>
                 <></>
@@ -576,6 +609,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             })
             const caption = await generateCaption(
               'Generic',
+              [],
               'showMarketOverview',
               aiState
             )
@@ -591,7 +625,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
         showMarketHeatmap: {
           description: `This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.`,
           parameters: z.object({}),
-          generate: async function* ({}) {
+          generate: async function* ({ }) {
             yield (
               <BotCard>
                 <></>
@@ -632,6 +666,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             })
             const caption = await generateCaption(
               'Generic',
+              [],
               'showMarketHeatmap',
               aiState
             )
@@ -647,7 +682,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
         showETFHeatmap: {
           description: `This tool shows a heatmap of today's ETF performance across sectors and asset classes. It is preferred over showMarketOverview if asked specifically about the ETF market.`,
           parameters: z.object({}),
-          generate: async function* ({}) {
+          generate: async function* ({ }) {
             yield (
               <BotCard>
                 <></>
@@ -688,6 +723,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             })
             const caption = await generateCaption(
               'Generic',
+              [],
               'showETFHeatmap',
               aiState
             )
@@ -703,7 +739,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
         showTrendingStocks: {
           description: `This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance`,
           parameters: z.object({}),
-          generate: async function* ({}) {
+          generate: async function* ({ }) {
             yield (
               <BotCard>
                 <></>
@@ -744,6 +780,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
             })
             const caption = await generateCaption(
               'Generic',
+              [],
               'showTrendingStocks',
               aiState
             )
