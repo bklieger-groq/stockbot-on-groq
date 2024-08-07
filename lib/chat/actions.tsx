@@ -57,8 +57,6 @@ async function generateCaption(
   toolName: string,
   aiState: MutableAIState
 ): Promise<string> {
-
-  console.log(comparisonSymbols)
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
     apiKey: GROQ_API_KEY_ENV
