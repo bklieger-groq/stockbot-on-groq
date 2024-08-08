@@ -23,7 +23,7 @@ export function StockChart({ symbol, comparisonSymbols }: { symbol: string, comp
       interval: 'D',
       timezone: 'Etc/UTC',
       theme: 'light',
-      style: '1',
+      style: '2',
       locale: 'en',
       backgroundColor: 'rgba(255, 255, 255, 1)',
       gridColor: 'rgba(247, 247, 247, 1)',
