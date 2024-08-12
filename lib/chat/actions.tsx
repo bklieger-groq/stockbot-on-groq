@@ -61,6 +61,10 @@ async function generateCaption(
     baseURL: 'https://api.groq.com/openai/v1',
     apiKey: GROQ_API_KEY_ENV
   })
+  
+  const stockString = comparisonSymbols.length === 0
+  ? symbol
+  : [symbol, ...comparisonSymbols.map(obj => obj.symbol)].join(', ');
 
   aiState.update({
     ...aiState.get(),
@@ -76,7 +80,7 @@ These are the tools you have available:
 This tool shows the financials for a given stock.
 
 2. showStockChart
-This tool shows a stock chart for a given stock or currency. Optionally compare 2 or more tickers
+This tool shows a stock chart for a given stock or currency. Optionally compare 2 or more tickers.
 
 3. showStockPrice
 This tool shows the price of a stock or currency.
@@ -97,13 +101,13 @@ This tool shows a heatmap of today's stock market performance across sectors.
 This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance.
 
 9. showETFHeatmap
-TThis tool shows a heatmap of today's ETF market performance across sectors and asset classes.
+This tool shows a heatmap of today's ETF market performance across sectors and asset classes.
 
 
 You have just called a tool (` +
     toolName +
     ` for ` +
-    symbol + ' and ' + comparisonSymbols +
+    stockString +
     `) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
   
 Example:
@@ -246,7 +250,7 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
       tools: {
         showStockChart: {
           description:
-            'Show a stock chart of a given stock. Use this to show the chart to the user.',
+            'Show a stock chart of a given stock. Optionally show 2 or more stocks. Use this to show the chart to the user.',
           parameters: z.object({
             symbol: z
               .string()
