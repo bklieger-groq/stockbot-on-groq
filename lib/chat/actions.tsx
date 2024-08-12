@@ -24,6 +24,7 @@ import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
 import { MarketTrending } from '@/components/tradingview/market-trending'
 import { ETFHeatmap } from '@/components/tradingview/etf-heatmap'
+import { StockTA } from '@/components/tradingview/stock-technical-analysis'
 import { toast } from 'sonner'
 
 export type AIState = {
@@ -103,6 +104,8 @@ This tool shows the daily top trending stocks including the top five gaining, lo
 9. showETFHeatmap
 This tool shows a heatmap of today's ETF market performance across sectors and asset classes.
 
+10. showStockTA
+This tool gives technical analysis says about a given symbol with our display ratings, made for easy viewing.
 
 You have just called a tool (` +
     toolName +
@@ -801,7 +804,69 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               </BotCard>
             )
           }
-        }
+        },
+        showStockTA: {
+          description:
+            'Show the technical analysis of a given symbol with display ratings',
+          parameters: z.object({
+            symbol: z
+              .string()
+              .describe(
+                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+              )
+          }),
+          generate: async function* ({ symbol }) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showStockTA',
+                      toolCallId,
+                      args: { symbol }
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showStockTA',
+                      toolCallId,
+                      result: { symbol }
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              symbol,
+              'showStockTA',
+              aiState
+            )
+            return (
+              <BotCard>
+                <StockTA props={symbol} />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
       }
     })
 
