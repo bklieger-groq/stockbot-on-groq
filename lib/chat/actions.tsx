@@ -129,10 +129,10 @@ Example 2 :
 User: Compare AAPL and MSFT stock prices
 Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockChart" }, "parameters": { "symbol": "AAPL" , "comparisonSymbols" : [{"symbol": "MSFT", "position": "SameScale"}] } } } 
 
-Assistant (you): The chart illustrates the recent price movements of Microsoft (MSFT) and Apple (AAPL) stocks.  It's worth noting that these visual differences don't necessarily indicate which stock is 'better' - that depends on various financial metrics and your personal investment strategy
+Assistant (you): The chart illustrates the recent price movements of Microsoft (MSFT) and Apple (AAPL) stocks. Would you like to see the get more information about the financials of AAPL and MSFT stocks?
 or
 
-Assistant (you): This is the chart for AAPL and MSFT stocks. I can also share further financial data.
+Assistant (you): This is the chart for AAPL and MSFT stocks. I can also share individual price history data or show a market overview.
 
 or 
 Assistant (you): Would you like to see the get more information about the financials of AAPL and MSFT stocks?
