@@ -24,6 +24,7 @@ import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
 import { MarketTrending } from '@/components/tradingview/market-trending'
 import { ETFHeatmap } from '@/components/tradingview/etf-heatmap'
+import { EconomicCalendar } from '@/components/tradingview/economic-calendar'
 import { toast } from 'sonner'
 
 export type AIState = {
@@ -61,10 +62,10 @@ async function generateCaption(
     baseURL: 'https://api.groq.com/openai/v1',
     apiKey: GROQ_API_KEY_ENV
   })
-  
+
   const stockString = comparisonSymbols.length === 0
-  ? symbol
-  : [symbol, ...comparisonSymbols.map(obj => obj.symbol)].join(', ');
+    ? symbol
+    : [symbol, ...comparisonSymbols.map(obj => obj.symbol)].join(', ');
 
   aiState.update({
     ...aiState.get(),
@@ -102,6 +103,9 @@ This tool shows the daily top trending stocks including the top five gaining, lo
 
 9. showETFHeatmap
 This tool shows a heatmap of today's ETF market performance across sectors and asset classes.
+
+10. showEconomicCalendar
+This tool shows key upcoming economic events, announcements, and news
 
 
 You have just called a tool (` +
@@ -801,7 +805,66 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
               </BotCard>
             )
           }
-        }
+        },
+
+        showEconomicCalendar: {
+          description: `This tool shows key upcoming economic events, announcements, and news.`,
+          parameters: z.object({}),
+          generate: async function* ({ }) {
+            yield (
+              <BotCard>
+                <></>
+              </BotCard>
+            )
+
+            const toolCallId = nanoid()
+
+            aiState.done({
+              ...aiState.get(),
+              messages: [
+                ...aiState.get().messages,
+                {
+                  id: nanoid(),
+                  role: 'assistant',
+                  content: [
+                    {
+                      type: 'tool-call',
+                      toolName: 'showEconomicCalendar',
+                      toolCallId,
+                      args: {}
+                    }
+                  ]
+                },
+                {
+                  id: nanoid(),
+                  role: 'tool',
+                  content: [
+                    {
+                      type: 'tool-result',
+                      toolName: 'showEconomicCalendar',
+                      toolCallId,
+                      result: {}
+                    }
+                  ]
+                }
+              ]
+            })
+            const caption = await generateCaption(
+              'Generic',
+              [],
+              'showEconomicCalendar',
+              aiState
+            )
+
+            return (
+              <BotCard>
+                <EconomicCalendar />
+                {caption}
+              </BotCard>
+            )
+          }
+        },
+
       }
     })
 

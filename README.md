@@ -40,7 +40,8 @@ StockBot is an AI-powered chatbot that leverages Llama3 70b on Groq, Vercel’s 
 ## Interfaces
 | Description | Widget |
 |-------------|--------|
-| **Heatmap of Daily Market Performance**<br>Visualize market trends at a glance with an interactive heatmap. | ![Heatmap of Daily Market Performance](https://github.com/user-attachments/assets/2e3919a3-280b-4be4-adcd-a1ff636bff3e) |
+| **Heatmap of Daily Market Performance**<br>Visualize Stock and ETF market trends at a glance with an interactive heatmap. | ![Heatmap of Daily Stock Market Performance](https://github.com/user-attachments/assets/2e3919a3-280b-4be4-adcd-a1ff636bff3e)  ![Heatmap of Daily ETF Market Performance](https://github.com/user-attachments/assets/be6bc53f-469c-45f0-b5c4-b257f0fcc56b)|
+| **Top Gainers, Losers and Most active stocks**<br>Get detailed financial metrics and key performance indicators for any stock. | ![Breakdown of Financial Data for Stocks](https://github.com/user-attachments/assets/836df056-d8b2-4486-9409-a58b08457454) |
 | **Breakdown of Financial Data for Stocks**<br>Get detailed financial metrics and key performance indicators for any stock. | ![Breakdown of Financial Data for Stocks](https://github.com/user-attachments/assets/c1c32dac-8295-4efb-ac1e-2eea8a89e7db) |
 | **Price History of Stock**<br>Track the historical price movement of stocks with customizable date ranges. | ![Price History of Stock](https://github.com/user-attachments/assets/f588068e-4d95-4188-96fd-866d355c993e) |
 | **Candlestick Stock Charts for Specific Assets**<br>Analyze price patterns and trends with detailed candlestick charts. | ![Candlestick Stock Charts for Specific Assets](https://github.com/user-attachments/assets/ce9ea4a8-a1fe-4ce7-be60-3f5d64d50ced) |
