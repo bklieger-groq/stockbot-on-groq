@@ -61,6 +61,11 @@ export function ChatPanel({
       heading: 'Show me a screener',
       subheading: 'to find new stocks',
       message: 'Show me a screener to find new stocks'
+    },
+    {
+      heading: 'Show me a calendar',
+      subheading: 'to track key upcoming economic events',
+      message: 'Show me a calendar to track key upcoming economic events'
     }
   ]
 
