@@ -94,8 +94,13 @@ For each of the relevant stocks you should provide the following in table format
 - Cash balance in 2024 Q2
 - Current Market Sentiment being positive, negative, or netural
 - Apprecaition percentage over last 3 months
+- Industry sector
 
-You would then rank top 5 from above table according to investment goal user provided.
+You would then rank top 5 from above table according to the following criteria:
+1. investment goal user provided and whether they have potential for significant gain in short term or long term
+2. not more than 3 choice from the same industry sector
+
+You would provide this in the table format as above for the top five choices.
 
 
 Example 1 :
@@ -160,7 +165,11 @@ You will be provided with the following:
 - Stock ticker: representing stock symbol
 - investment goal: representing if user wants to invest in short-term, mid-term, or long-term.
 
-You will then have to list 10 relevant stock tickers that the user provided one would depend on in its supply chain, or as its dependent products.
+You will then have to list 10 relevant stock tickers that would satisfy either of the following criteria:
+1. The user provided ticker would heavily buy from the relevant stock sticker in its upstream supply chain
+2. The user provided ticker would heavily depend on a service provided by the relevant stock ticker
+
+
 For each of the relevant stocks you should provide the following in table format:
 
 - Ticker name
@@ -168,8 +177,13 @@ For each of the relevant stocks you should provide the following in table format
 - Cash balance in 2024 Q2
 - Current Market Sentiment being positive, negative, or netural
 - Apprecaition percentage over last 3 months
+- Industry sector
 
-You would then rank top 5 from above table according to investment goal user provided, and provide in the table format as above for the top five choices
+You would then rank top 5 from above table according to the following criteria:
+1. investment goal user provided and whether they have potential for significant gain in short term or long term
+2. not more than 3 choice from the same industry sector
+
+You would provide this in the table format as above for the top five choices.
 
 
 Example 1 :
