@@ -169,7 +169,7 @@ For each of the relevant stocks you should provide the following in table format
 - Current Market Sentiment being positive, negative, or netural
 - Apprecaition percentage over last 3 months
 
-You would then rank top 5 from above table according to investment goal user provided.
+You would then rank top 5 from above table according to investment goal user provided, and provide in the table format as above for the top five choices
 
 
 Example 1 :
