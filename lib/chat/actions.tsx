@@ -24,7 +24,15 @@ import { MarketOverview } from '@/components/tradingview/market-overview'
 import { MarketHeatmap } from '@/components/tradingview/market-heatmap'
 import { MarketTrending } from '@/components/tradingview/market-trending'
 import { ETFHeatmap } from '@/components/tradingview/etf-heatmap'
+// import { Showdown }  from 'showdown'
+import MarkdownIt from 'markdown-it';
 import { toast } from 'sonner'
+
+const md = new MarkdownIt();
+
+
+// Create a converter instance
+// const converter = new Showdown.Converter();
 
 export type AIState = {
   chatId: string
@@ -73,76 +81,36 @@ async function generateCaption(
 
   const captionSystemMessage =
     `\
-You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
+You are a stock market conversation bot. You can provide the user information about stocks.
+You will be provided with the following:
+- Stock ticker: representing stock symbol
+- investment goal: representing if user wants to invest in short-term, mid-term, or long-term.
 
-These are the tools you have available:
-1. showStockFinancials
-This tool shows the financials for a given stock.
-
-2. showStockChart
-This tool shows a stock chart for a given stock or currency. Optionally compare 2 or more tickers.
-
-3. showStockPrice
-This tool shows the price of a stock or currency.
-
-4. showStockNews
-This tool shows the latest news and events for a stock or cryptocurrency.
-
-5. showStockScreener
-This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.
-
-6. showMarketOverview
-This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.
-
-7. showMarketHeatmap
-This tool shows a heatmap of today's stock market performance across sectors.
-
-8. showTrendingStocks
-This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance.
-
-9. showETFHeatmap
-This tool shows a heatmap of today's ETF market performance across sectors and asset classes.
+You will then have to list 10 relevant stock tickers that would satisfy either of the following criteria:
+1. The user provided ticker would heavily buy from the relevant stock sticker in its upstream supply chain
+2. The user provided ticker would heavily depend on a service provided by the relevant stock ticker
+3. supporting stock to what user provided
 
 
-You have just called a tool (` +
-    toolName +
-    ` for ` +
-    stockString +
-    `) to respond to the user. Now generate text to go alongside that tool response, which may be a graphic like a chart or price history.
-  
-Example:
+For each of the relevant stocks you should provide the following in table format:
 
-User: What is the price of AAPL?
-Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
+- Ticker name
+- Profitability in 2024 Q2
+- Cash balance in 2024 Q2
+- Current Market Sentiment being positive, negative, or netural
+- Apprecaition percentage over last 3 months
+- Industry sector
 
-Assistant (you): The price of AAPL stock is provided above. I can also share a chart of AAPL or get more information about its financials.
+You would then rank top 5 from above table according to the following criteria:
+1. investment goal user provided and whether they have potential for significant gain in short term or long term
+2. not more than 3 choice from the same industry sector
 
-or
+You would provide this in the table format as above for the top five choices.
+Format the table with nice emojis, and nice slide deck format. 
 
-Assistant (you): This is the price of AAPL stock. I can also generate a chart or share further financial data.
+Example 1 :
 
-or 
-Assistant (you): Would you like to see a chart of AAPL or get more information about its financials?
-
-Example 2 :
-
-User: Compare AAPL and MSFT stock prices
-Assistant: { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockChart" }, "parameters": { "symbol": "AAPL" , "comparisonSymbols" : [{"symbol": "MSFT", "position": "SameScale"}] } } } 
-
-Assistant (you): The chart illustrates the recent price movements of Microsoft (MSFT) and Apple (AAPL) stocks. Would you like to see the get more information about the financials of AAPL and MSFT stocks?
-or
-
-Assistant (you): This is the chart for AAPL and MSFT stocks. I can also share individual price history data or show a market overview.
-
-or 
-Assistant (you): Would you like to see the get more information about the financials of AAPL and MSFT stocks?
-
-## Guidelines
-Talk like one of the above responses, but BE CREATIVE and generate a DIVERSE response. 
-
-Your response should be BRIEF, about 2-3 sentences.
-
-Besides the symbol, you cannot customize any of the screeners or graphics. Do not tell the user that you can.
+User: NVIDIA, short term
     `
 
   try {
@@ -160,7 +128,7 @@ Besides the symbol, you cannot customize any of the screeners or graphics. Do no
         }))
       ]
     })
-    return response.text || ''
+    return md.render(response.text) || ''
   } catch (err) {
     return '' // Send tool use without caption.
   }
@@ -197,23 +165,36 @@ async function submitUserMessage(content: string) {
       initial: <SpinnerMessage />,
       maxRetries: 1,
       system: `\
-You are a stock market conversation bot. You can provide the user information about stocks include prices and charts in the UI. You do not have access to any information and should only provide information by calling functions.
+You are a stock market conversation bot. You can provide the user information about stocks.
+You will be provided with the following:
+- Stock ticker: representing stock symbol
+- investment goal: representing if user wants to invest in short-term, mid-term, or long-term.
 
-### Cryptocurrency Tickers
-For any cryptocurrency, append "USD" at the end of the ticker when using functions. For instance, "DOGE" should be "DOGEUSD".
+You will then have to list 10 relevant stock tickers that would satisfy either of the following criteria:
+1. The user provided ticker would heavily buy from the relevant stock sticker in its upstream supply chain
+2. The user provided ticker would heavily depend on a service provided by the relevant stock ticker
+3. supporting stock to what user provided
 
-### Guidelines:
 
-Never provide empty results to the user. Provide the relevant tool if it matches the user's request. Otherwise, respond as the stock bot.
-Example:
+For each of the relevant stocks you should provide the following in table format:
 
-User: What is the price of AAPL?
-Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
+- Ticker name
+- Profitability in 2024 Q2
+- Cash balance in 2024 Q2
+- Current Market Sentiment being positive, negative, or netural
+- Apprecaition percentage over last 3 months
+- Industry sector
 
-Example 2:
+You would then rank top 5 from above table according to the following criteria:
+1. investment goal user provided and whether they have potential for significant gain in short term or long term
+2. not more than 3 choice from the same industry sector
 
-User: What is the price of AAPL?
-Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function": { "name": "showStockPrice" }, "parameters": { "symbol": "AAPL" } } } 
+You would provide this in the table format as above for the top five choices.
+Format the table with nice emojis, and nice slide deck format. 
+
+Example 1 :
+
+User: NVIDIA, short term
     `,
       messages: [
         ...aiState.get().messages.map((message: any) => ({
@@ -248,560 +229,561 @@ Assistant (you): { "tool_call": { "id": "pending", "type": "function", "function
         return textNode
       },
       tools: {
-        showStockChart: {
-          description:
-            'Show a stock chart of a given stock. Optionally show 2 or more stocks. Use this to show the chart to the user.',
-          parameters: z.object({
-            symbol: z
-              .string()
-              .describe(
-                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-              ),
-            comparisonSymbols: z.array(z.object({
-              symbol: z.string(),
-              position: z.literal("SameScale")
-            }))
-              .default([])
-              .describe(
-                'Optional list of symbols to compare. e.g. ["MSFT", "GOOGL"]'
-              )
-          }),
+        // showStockChart: {
+        //   description:
+        //     'Show a stock chart of a given stock. Optionally show 2 or more stocks. Use this to show the chart to the user.',
+        //   parameters: z.object({
+        //     symbol: z
+        //       .string()
+        //       .describe(
+        //         'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+        //       ),
+        //     comparisonSymbols: z.array(z.object({
+        //       symbol: z.string(),
+        //       position: z.literal("SameScale")
+        //     }))
+        //       .default([])
+        //       .describe(
+        //         'Optional list of symbols to compare. e.g. ["MSFT", "GOOGL"]'
+        //       )
+        //   }),
 
-          generate: async function* ({ symbol, comparisonSymbols }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //   generate: async function* ({ symbol, comparisonSymbols }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockChart',
-                      toolCallId,
-                      args: { symbol, comparisonSymbols }
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockChart',
-                      toolCallId,
-                      result: { symbol, comparisonSymbols }
-                    }
-                  ]
-                }
-              ]
-            })
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showStockChart',
+        //               toolCallId,
+        //               args: { symbol, comparisonSymbols }
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showStockChart',
+        //               toolCallId,
+        //               result: { symbol, comparisonSymbols }
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
 
-            const caption = await generateCaption(
-              symbol,
-              comparisonSymbols,
-              'showStockChart',
-              aiState
-            )
+        //     const caption = await generateCaption(
+        //       symbol,
+        //       comparisonSymbols,
+        //       'showStockChart',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <StockChart symbol={symbol} comparisonSymbols={comparisonSymbols} />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showStockPrice: {
-          description:
-            'Show the price of a given stock. Use this to show the price and price history to the user.',
-          parameters: z.object({
-            symbol: z
-              .string()
-              .describe(
-                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-              )
-          }),
-          generate: async function* ({ symbol }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <StockChart symbol={symbol} comparisonSymbols={comparisonSymbols} />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showStockPrice: {
+        //   description:
+        //     'Show the price of a given stock. Use this to show the price and price history to the user.',
+        //   parameters: z.object({
+        //     symbol: z
+        //       .string()
+        //       .describe(
+        //         'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+        //       )
+        //   }),
+        //   generate: async function* ({ symbol }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockPrice',
-                      toolCallId,
-                      args: { symbol }
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockPrice',
-                      toolCallId,
-                      result: { symbol }
-                    }
-                  ]
-                }
-              ]
-            })
-            const caption = await generateCaption(
-              symbol,
-              [],
-              'showStockPrice',
-              aiState
-            )
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showStockPrice',
+        //               toolCallId,
+        //               args: { symbol }
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showStockPrice',
+        //               toolCallId,
+        //               result: { symbol }
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
+        //     const caption = await generateCaption(
+        //       symbol,
+        //       [],
+        //       'showStockPrice',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <StockPrice props={symbol} />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showStockFinancials: {
-          description:
-            'Show the financials of a given stock. Use this to show the financials to the user.',
-          parameters: z.object({
-            symbol: z
-              .string()
-              .describe(
-                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-              )
-          }),
-          generate: async function* ({ symbol }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <div
+        //       dangerouslySetInnerHTML={{ __html: caption }} />
+        //       // <BotCard>
+        //       //   <StockPrice props={symbol} />
+        //       // </BotCard>
+        //     )
+        //   }
+        // },
+        // showStockFinancials: {
+        //   description:
+        //     'Show the financials of a given stock. Use this to show the financials to the user.',
+        //   parameters: z.object({
+        //     symbol: z
+        //       .string()
+        //       .describe(
+        //         'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+        //       )
+        //   }),
+        //   generate: async function* ({ symbol }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockFinancials',
-                      toolCallId,
-                      args: { symbol }
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockFinancials',
-                      toolCallId,
-                      result: { symbol }
-                    }
-                  ]
-                }
-              ]
-            })
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showStockFinancials',
+        //               toolCallId,
+        //               args: { symbol }
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showStockFinancials',
+        //               toolCallId,
+        //               result: { symbol }
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
 
-            const caption = await generateCaption(
-              symbol,
-              [],
-              'StockFinancials',
-              aiState
-            )
+        //     const caption = await generateCaption(
+        //       symbol,
+        //       [],
+        //       'StockFinancials',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <StockFinancials props={symbol} />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showStockNews: {
-          description:
-            'This tool shows the latest news and events for a stock or cryptocurrency.',
-          parameters: z.object({
-            symbol: z
-              .string()
-              .describe(
-                'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
-              )
-          }),
-          generate: async function* ({ symbol }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <StockFinancials props={symbol} />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showStockNews: {
+        //   description:
+        //     'This tool shows the latest news and events for a stock or cryptocurrency.',
+        //   parameters: z.object({
+        //     symbol: z
+        //       .string()
+        //       .describe(
+        //         'The name or symbol of the stock or currency. e.g. DOGE/AAPL/USD.'
+        //       )
+        //   }),
+        //   generate: async function* ({ symbol }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockNews',
-                      toolCallId,
-                      args: { symbol }
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockNews',
-                      toolCallId,
-                      result: { symbol }
-                    }
-                  ]
-                }
-              ]
-            })
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showStockNews',
+        //               toolCallId,
+        //               args: { symbol }
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showStockNews',
+        //               toolCallId,
+        //               result: { symbol }
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
 
-            const caption = await generateCaption(
-              symbol,
-              [],
-              'showStockNews',
-              aiState
-            )
+        //     const caption = await generateCaption(
+        //       symbol,
+        //       [],
+        //       'showStockNews',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <StockNews props={symbol} />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showStockScreener: {
-          description:
-            'This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.',
-          parameters: z.object({}),
-          generate: async function* ({ }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <StockNews props={symbol} />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showStockScreener: {
+        //   description:
+        //     'This tool shows a generic stock screener which can be used to find new stocks based on financial or technical parameters.',
+        //   parameters: z.object({}),
+        //   generate: async function* ({ }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showStockScreener',
-                      toolCallId,
-                      args: {}
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showStockScreener',
-                      toolCallId,
-                      result: {}
-                    }
-                  ]
-                }
-              ]
-            })
-            const caption = await generateCaption(
-              'Generic',
-              [],
-              'showStockScreener',
-              aiState
-            )
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showStockScreener',
+        //               toolCallId,
+        //               args: {}
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showStockScreener',
+        //               toolCallId,
+        //               result: {}
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
+        //     const caption = await generateCaption(
+        //       'Generic',
+        //       [],
+        //       'showStockScreener',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <StockScreener />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showMarketOverview: {
-          description: `This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.`,
-          parameters: z.object({}),
-          generate: async function* ({ }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <StockScreener />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showMarketOverview: {
+        //   description: `This tool shows an overview of today's stock, futures, bond, and forex market performance including change values, Open, High, Low, and Close values.`,
+        //   parameters: z.object({}),
+        //   generate: async function* ({ }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showMarketOverview',
-                      toolCallId,
-                      args: {}
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showMarketOverview',
-                      toolCallId,
-                      result: {}
-                    }
-                  ]
-                }
-              ]
-            })
-            const caption = await generateCaption(
-              'Generic',
-              [],
-              'showMarketOverview',
-              aiState
-            )
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showMarketOverview',
+        //               toolCallId,
+        //               args: {}
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showMarketOverview',
+        //               toolCallId,
+        //               result: {}
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
+        //     const caption = await generateCaption(
+        //       'Generic',
+        //       [],
+        //       'showMarketOverview',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <MarketOverview />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showMarketHeatmap: {
-          description: `This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.`,
-          parameters: z.object({}),
-          generate: async function* ({ }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <MarketOverview />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showMarketHeatmap: {
+        //   description: `This tool shows a heatmap of today's stock market performance across sectors. It is preferred over showMarketOverview if asked specifically about the stock market.`,
+        //   parameters: z.object({}),
+        //   generate: async function* ({ }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showMarketHeatmap',
-                      toolCallId,
-                      args: {}
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showMarketHeatmap',
-                      toolCallId,
-                      result: {}
-                    }
-                  ]
-                }
-              ]
-            })
-            const caption = await generateCaption(
-              'Generic',
-              [],
-              'showMarketHeatmap',
-              aiState
-            )
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showMarketHeatmap',
+        //               toolCallId,
+        //               args: {}
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showMarketHeatmap',
+        //               toolCallId,
+        //               result: {}
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
+        //     const caption = await generateCaption(
+        //       'Generic',
+        //       [],
+        //       'showMarketHeatmap',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <MarketHeatmap />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showETFHeatmap: {
-          description: `This tool shows a heatmap of today's ETF performance across sectors and asset classes. It is preferred over showMarketOverview if asked specifically about the ETF market.`,
-          parameters: z.object({}),
-          generate: async function* ({ }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <MarketHeatmap />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showETFHeatmap: {
+        //   description: `This tool shows a heatmap of today's ETF performance across sectors and asset classes. It is preferred over showMarketOverview if asked specifically about the ETF market.`,
+        //   parameters: z.object({}),
+        //   generate: async function* ({ }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showETFHeatmap',
-                      toolCallId,
-                      args: {}
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showETFHeatmap',
-                      toolCallId,
-                      result: {}
-                    }
-                  ]
-                }
-              ]
-            })
-            const caption = await generateCaption(
-              'Generic',
-              [],
-              'showETFHeatmap',
-              aiState
-            )
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showETFHeatmap',
+        //               toolCallId,
+        //               args: {}
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showETFHeatmap',
+        //               toolCallId,
+        //               result: {}
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
+        //     const caption = await generateCaption(
+        //       'Generic',
+        //       [],
+        //       'showETFHeatmap',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <ETFHeatmap />
-                {caption}
-              </BotCard>
-            )
-          }
-        },
-        showTrendingStocks: {
-          description: `This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance`,
-          parameters: z.object({}),
-          generate: async function* ({ }) {
-            yield (
-              <BotCard>
-                <></>
-              </BotCard>
-            )
+        //     return (
+        //       <BotCard>
+        //         <ETFHeatmap />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // },
+        // showTrendingStocks: {
+        //   description: `This tool shows the daily top trending stocks including the top five gaining, losing, and most active stocks based on today's performance`,
+        //   parameters: z.object({}),
+        //   generate: async function* ({ }) {
+        //     yield (
+        //       <BotCard>
+        //         <></>
+        //       </BotCard>
+        //     )
 
-            const toolCallId = nanoid()
+        //     const toolCallId = nanoid()
 
-            aiState.done({
-              ...aiState.get(),
-              messages: [
-                ...aiState.get().messages,
-                {
-                  id: nanoid(),
-                  role: 'assistant',
-                  content: [
-                    {
-                      type: 'tool-call',
-                      toolName: 'showTrendingStocks',
-                      toolCallId,
-                      args: {}
-                    }
-                  ]
-                },
-                {
-                  id: nanoid(),
-                  role: 'tool',
-                  content: [
-                    {
-                      type: 'tool-result',
-                      toolName: 'showTrendingStocks',
-                      toolCallId,
-                      result: {}
-                    }
-                  ]
-                }
-              ]
-            })
-            const caption = await generateCaption(
-              'Generic',
-              [],
-              'showTrendingStocks',
-              aiState
-            )
+        //     aiState.done({
+        //       ...aiState.get(),
+        //       messages: [
+        //         ...aiState.get().messages,
+        //         {
+        //           id: nanoid(),
+        //           role: 'assistant',
+        //           content: [
+        //             {
+        //               type: 'tool-call',
+        //               toolName: 'showTrendingStocks',
+        //               toolCallId,
+        //               args: {}
+        //             }
+        //           ]
+        //         },
+        //         {
+        //           id: nanoid(),
+        //           role: 'tool',
+        //           content: [
+        //             {
+        //               type: 'tool-result',
+        //               toolName: 'showTrendingStocks',
+        //               toolCallId,
+        //               result: {}
+        //             }
+        //           ]
+        //         }
+        //       ]
+        //     })
+        //     const caption = await generateCaption(
+        //       'Generic',
+        //       [],
+        //       'showTrendingStocks',
+        //       aiState
+        //     )
 
-            return (
-              <BotCard>
-                <MarketTrending />
-                {caption}
-              </BotCard>
-            )
-          }
-        }
+        //     return (
+        //       <BotCard>
+        //         <MarketTrending />
+        //         {caption}
+        //       </BotCard>
+        //     )
+        //   }
+        // }
       }
     })
 
