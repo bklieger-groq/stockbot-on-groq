@@ -26,7 +26,7 @@ import { MarketTrending } from '@/components/tradingview/market-trending'
 import { ETFHeatmap } from '@/components/tradingview/etf-heatmap'
 // import { Showdown }  from 'showdown'
 import MarkdownIt from 'markdown-it';
-import { toast } from 'sonner'
+import { toast } from 'sonner';
 
 const md = new MarkdownIt();
 
@@ -68,16 +68,15 @@ async function generateCaption(
   const groq = createOpenAI({
     baseURL: 'https://api.groq.com/openai/v1',
     apiKey: GROQ_API_KEY_ENV
-  })
-  
+  });
   const stockString = comparisonSymbols.length === 0
-  ? symbol
-  : [symbol, ...comparisonSymbols.map(obj => obj.symbol)].join(', ');
+    ? symbol
+    : [symbol, ...comparisonSymbols.map(obj => obj.symbol)].join(', ');
 
   aiState.update({
     ...aiState.get(),
     messages: [...aiState.get().messages]
-  })
+  });
 
   const captionSystemMessage =
     `\
@@ -127,10 +126,13 @@ User: NVIDIA, short term
           name: message.name
         }))
       ]
-    })
-    return md.render(response.text) || ''
+    });
+
+    const renderedText = md.render(response.text) || '';
+    return renderedText;
   } catch (err) {
-    return '' // Send tool use without caption.
+    console.error('Error during caption generation or evaluation:', err);
+    return '';
   }
 }
 

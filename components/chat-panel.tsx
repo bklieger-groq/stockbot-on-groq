@@ -30,7 +30,6 @@ export function ChatPanel({
   const [aiState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
   const { submitUserMessage } = useActions()
-
   const exampleMessages = [
   ]
 

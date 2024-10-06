@@ -1,5 +1,4 @@
 'use client'
-
 import * as React from 'react'
 import Textarea from 'react-textarea-autosize'
 
@@ -33,7 +32,6 @@ export function PromptForm({
   const { submitUserMessage } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
   const [apiKey, setApiKey] = useLocalStorage('groqKey', '')
-
   React.useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
@@ -63,7 +61,6 @@ export function PromptForm({
             display: <UserMessage>{value}</UserMessage>
           }
         ])
-
         // Submit and get response message
         const responseMessage = await submitUserMessage(value, apiKey)
         setMessages(currentMessages => [...currentMessages, responseMessage])
