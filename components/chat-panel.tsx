@@ -19,7 +19,7 @@ export interface ChatPanelProps {
   scrollToBottom: () => void
 }
 
-export function ChatPanel({
+# export function ChatPanel({
   id,
   title,
   input,

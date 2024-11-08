@@ -7,7 +7,7 @@ import { EmptyScreen } from '@/components/empty-screen'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { useEffect, useState } from 'react'
 import { useUIState, useAIState } from 'ai/rsc'
-import { Message, Session } from '@/lib/types'
+import { Message, Chat as ChatType, Session } from '@/lib/types'
 import { usePathname, useRouter } from 'next/navigation'
 import { useScrollAnchor } from '@/lib/hooks/use-scroll-anchor'
 import { toast } from 'sonner'
@@ -27,8 +27,22 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
   const [input, setInput] = useState('')
   const [messages] = useUIState()
   const [aiState] = useAIState()
+  const [chatSessions, setChatSessions] = useLocalStorage<ChatType[]>('chat-sessions', [])
 
-  const [_, setNewChatId] = useLocalStorage('newChatId', id)
+  useEffect(() => {
+    if (id && messages.length > 0) {
+      const updatedSessions = [...chatSessions]
+      const sessionIndex = updatedSessions.findIndex(session => session.id === id)
+      
+      if (sessionIndex !== -1) {
+        updatedSessions[sessionIndex] = {
+          ...updatedSessions[sessionIndex],
+          messages: messages as Message[]
+        }
+        setChatSessions(updatedSessions)
+      }
+    }
+  }, [id, messages, chatSessions, setChatSessions])
 
   useEffect(() => {
     if (session?.user) {
@@ -43,15 +57,10 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     if (messagesLength === 2) {
       router.refresh()
     }
-    console.log('Value: ', aiState.messages)
   }, [aiState.messages, router])
 
   useEffect(() => {
-    setNewChatId(id)
-  })
-
-  useEffect(() => {
-    missingKeys.map(key => {
+    missingKeys.forEach(key => {
       toast.error(`Missing ${key} environment variable!`)
     })
   }, [missingKeys])
@@ -61,7 +70,10 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
 
   return (
     <div
-      className="group w-full overflow-auto pl-0 peer-[[data-state=open]]:lg:pl-[250px] peer-[[data-state=open]]:xl:pl-[300px]"
+      className={cn(
+        "group w-full overflow-auto pl-0",
+        className
+      )}
       ref={scrollRef}
     >
       {messages.length ? (
@@ -72,8 +84,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
 
       <div
         className={cn(
-          messages.length ? 'pb-[200px] pt-4 md:pt-6' : 'pb-[200px] pt-0',
-          className
+          messages.length ? 'pb-[200px] pt-4 md:pt-6' : 'pb-[200px] pt-0'
         )}
         ref={messagesRef}
       >

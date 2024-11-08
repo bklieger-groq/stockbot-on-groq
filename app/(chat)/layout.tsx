@@ -1,11 +1,18 @@
+'use client'
+
+import { ChatSidebar } from '@/components/chat-sidebar'
+
 interface ChatLayoutProps {
   children: React.ReactNode
 }
 
-export default async function ChatLayout({ children }: ChatLayoutProps) {
+export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
-    <div className="relative flex h-[calc(100vh_-_theme(spacing.16))] overflow-hidden">
-      {children}
+    <div className="flex h-[calc(100vh-4rem)]">
+      <ChatSidebar />
+      <div className="flex-1 overflow-auto">
+        {children}
+      </div>
     </div>
   )
 }
