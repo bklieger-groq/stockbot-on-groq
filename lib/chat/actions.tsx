@@ -42,8 +42,8 @@ interface MutableAIState {
   get: () => AIState
 }
 
-const MODEL = 'llama3-70b-8192'
-const TOOL_MODEL = 'llama3-70b-8192'
+const MODEL = 'llama-3.3-70b-versatile'
+const TOOL_MODEL = 'llama-3.3-70b-versatile'
 const GROQ_API_KEY_ENV = process.env.GROQ_API_KEY
 
 type ComparisonSymbolObject = {
