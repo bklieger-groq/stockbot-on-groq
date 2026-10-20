@@ -74,6 +74,22 @@ pnpm dev
 
 Your app should now be running on [localhost:3000](http://localhost:3000/).
 
+### Web research
+
+Ask StockBot to search for company announcements or earnings reports, or to read
+a public web page. The built-in `web_search` and `web_fetch` tools show source
+links and excerpts using [Parallel Search MCP](https://docs.parallel.ai/integrations/mcp/search-mcp).
+Search uses Fast mode with no Parallel account or API key. Your Groq API key is
+still required to run the chatbot. The existing TradingView tools remain available
+for stock prices, charts, financials and news widgets.
+
+Web research is enabled by default. Set `WEB_SEARCH_ENABLED=false` in `.env.local`
+and restart the server to disable both tools. Research queries and requested URLs
+are sent to Parallel; each chat uses a separate opaque conversation ID. The free
+service has usage limits. If a request fails or takes more than 20 seconds, the
+chat shows an error instead of inventing results. Web excerpts are source material,
+not investment advice.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) to see the latest changes and versions. Major versions are archived.
