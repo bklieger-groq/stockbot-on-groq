@@ -54,7 +54,7 @@ export function Header() {
       <div className="flex items-center justify-end space-x-2">
         <a
           target="_blank"
-          href="https://github.com/bklieger-groq/groq-gen-ui/"
+          href="https://github.com/bklieger-groq/stockbot-on-groq"
           rel="noopener noreferrer"
           className={cn(buttonVariants({ variant: 'outline' }))}
           style={{ borderRadius: 0 }}

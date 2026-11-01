@@ -40,9 +40,7 @@ export function StockChart({ symbol, comparisonSymbols }: { symbol: string, comp
     container.current.appendChild(script)
 
     return () => {
-      if (container.current) {
-        container.current.removeChild(script)
-      }
+      script.remove()
     }
   }, [symbol, comparisonSymbols])
 

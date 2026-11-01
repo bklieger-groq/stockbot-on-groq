@@ -15,7 +15,7 @@ export function StockNews({ props: symbol }: { props: string }) {
     script.innerHTML = `
       {
         "feedMode": "symbol",
-        "symbol": "${symbol}",
+        "symbol": ${JSON.stringify(symbol)},
         "isTransparent": true,
         "displayMode": "regular",
         "width": "100%",
@@ -27,12 +27,7 @@ export function StockNews({ props: symbol }: { props: string }) {
     container.current.appendChild(script)
 
     return () => {
-      if (container.current) {
-        const scriptElement = container.current.querySelector('script')
-        if (scriptElement) {
-          container.current.removeChild(scriptElement)
-        }
-      }
+      script.remove()
     }
   }, [symbol])
 

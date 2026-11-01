@@ -24,14 +24,14 @@
 
 ## Overview
 
-StockBot is an AI-powered chatbot that leverages Llama3 70b on Groq, Vercel’s AI SDK, and TradingView’s live widgets to respond in conversation with live, interactive charts and interfaces specifically tailored to your requests. Groq's speed makes tool calling and providing a response near instantaneous, allowing for a sequence of two API calls with separate specialized prompts to return a response.
+StockBot is an AI-powered chatbot that leverages GPT-OSS-120b on Groq, Vercel’s AI SDK, and TradingView’s live widgets to respond in conversation with live, interactive charts and interfaces specifically tailored to your requests. Groq's speed makes tool calling and providing a response near instantaneous, allowing for a sequence of two API calls with separate specialized prompts to return a response.
 
 > [!IMPORTANT]
 >  Note: StockBot may provide inaccurate information and does not provide investment advice. It is for entertainment and instructional use only.
 
 ## Features
 
-- 🤖 **Real-time AI Chatbot**: Engage with AI powered by Llama3 70b to request stock news, information, and charts through natural language conversation
+- 🤖 **Real-time AI Chatbot**: Engage with AI powered by GPT-OSS-120b to request stock news, information, and charts through natural language conversation
 - 📊 **Interactive Stock Charts**: Receive near-instant, context-aware responses with interactive TradingView charts that host live data
 - 🔄 **Adaptive Interface**: Dynamically render TradingView UI components for financial interfaces tailored to your specific query
 - ⚡ **Groq-Powered Performance**: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience

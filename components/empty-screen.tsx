@@ -23,7 +23,7 @@ export function EmptyScreen() {
             </ExternalLink>
             , and powered by{' '}
             <ExternalLink href="https://groq.com">
-              Llama3-70b on Groq
+              GPT-OSS-120b on Groq
             </ExternalLink>
           </span>
         </p>

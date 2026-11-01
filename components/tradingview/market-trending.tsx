@@ -39,9 +39,7 @@ export function MarketTrending({}) {
     container.current.appendChild(script)
 
     return () => {
-      if (container.current) {
-        container.current.removeChild(script)
-      }
+      script.remove()
     }
   }, [])
 

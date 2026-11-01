@@ -20,19 +20,14 @@ export function StockFinancials({ props: symbol }: { props: string }) {
         "width": "100%",
         "height": "100%",
         "colorTheme": "light",
-        "symbol": "${symbol}",
+        "symbol": ${JSON.stringify(symbol)},
         "locale": "en"
       }`
 
     container.current.appendChild(script)
 
     return () => {
-      if (container.current) {
-        const scriptElement = container.current.querySelector('script')
-        if (scriptElement) {
-          container.current.removeChild(scriptElement)
-        }
-      }
+      script.remove()
     }
   }, [symbol])
 

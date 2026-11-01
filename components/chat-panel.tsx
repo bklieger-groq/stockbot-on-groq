@@ -19,6 +19,45 @@ export interface ChatPanelProps {
   scrollToBottom: () => void
 }
 
+interface ExampleMessage {
+  heading: string
+  subheading: string
+  message: string
+}
+
+const exampleMessages: ExampleMessage[] = [
+  {
+    heading: 'What is the price',
+    subheading: 'of Apple Inc.?',
+    message: 'What is the price of Apple stock?'
+  },
+  {
+    heading: 'Show me a stock chart',
+    subheading: 'for $GOOGL',
+    message: 'Show me a stock chart for $GOOGL'
+  },
+  {
+    heading: 'What are some recent',
+    subheading: `events about Amazon?`,
+    message: `What are some recent events about Amazon?`
+  },
+  {
+    heading: `What are Microsoft's`,
+    subheading: 'latest financials?',
+    message: `What are Microsoft's latest financials?`
+  },
+  {
+    heading: 'How is the stock market',
+    subheading: 'performing today by sector?',
+    message: `How is the stock market performing today by sector?`
+  },
+  {
+    heading: 'Show me a screener',
+    subheading: 'to find new stocks',
+    message: 'Show me a screener to find new stocks'
+  }
+]
+
 export function ChatPanel({
   id,
   title,
@@ -30,45 +69,6 @@ export function ChatPanel({
   const [aiState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
   const { submitUserMessage } = useActions()
-
-  const exampleMessages = [
-    {
-      heading: 'What is the price',
-      subheading: 'of Apple Inc.?',
-      message: 'What is the price of Apple stock?'
-    },
-    {
-      heading: 'Show me a stock chart',
-      subheading: 'for $GOOGL',
-      message: 'Show me a stock chart for $GOOGL'
-    },
-    {
-      heading: 'What are some recent',
-      subheading: `events about Amazon?`,
-      message: `What are some recent events about Amazon?`
-    },
-    {
-      heading: `What are Microsoft's`,
-      subheading: 'latest financials?',
-      message: `What are Microsoft's latest financials?`
-    },
-    {
-      heading: 'How is the stock market',
-      subheading: 'performing today by sector?',
-      message: `How is the stock market performing today by sector?`
-    },
-    {
-      heading: 'Show me a screener',
-      subheading: 'to find new stocks',
-      message: 'Show me a screener to find new stocks'
-    }
-  ]
-
-  interface ExampleMessage {
-    heading: string
-    subheading: string
-    message: string
-  }
 
   const [randExamples, setRandExamples] = useState<ExampleMessage[]>([])
 

@@ -51,12 +51,7 @@ export function TickerTape() {
     container.current.appendChild(script)
 
     return () => {
-      if (container.current) {
-        const scriptElement = container.current.querySelector('script')
-        if (scriptElement) {
-          container.current.removeChild(scriptElement)
-        }
-      }
+      script.remove()
     }
   }, [])
 
